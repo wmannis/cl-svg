@@ -1,7 +1,6 @@
 TODO:
-  * Use <desc> and <title> elements in groups; certainly the top.
   * figure out A cmd in pathing
-  * groups  
+  * helpers point and paths - i.e., approach svgfig
 
 
 References:
@@ -49,4 +48,3 @@ References:
   * added a top-level DRAW* definition to throw a usage warning
 
 
-.
