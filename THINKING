@@ -1,0 +1,53 @@
+TODO:
+  * Use <desc> and <title> elements in groups; certainly the top.
+  * figure out A cmd in pathing
+  * groups  
+
+
+References:
+  http://srufaculty.sru.edu/david.dailey/svg/SVGAnimations.htm - EXCELLENT!!
+  http://www.codedread.com/displayWebStats.svg   - dragable library!
+  http://www.carto.net/papers/svg/samples/   - some really good stuff
+  http://www.dotuscomus.com/svg/lib/library.html   - funkiness
+  http://www.svgopen.org/2002/papers/sorotokin__svg_secrets/Pan.svg
+     - simple starting place for moving stuff around
+  http://croczilla.com/svg/samples/  - VERY nice - simple
+  http://apike.ca/prog_svg.html  -  another tutorial
+
+08mar17
+  * time to add grouping so traslation, rotation, etc. can be played
+    with
+
+08mar18
+  * need to map :view-box -> viewBox=  in attribute output (utils.lisp)
+
+08mar20
+  * indenting levels of grouping now works, and paragraph filling,
+    for neater XML reading
+
+08apr11
+  * oy
+  * use multiply embedded groups to add functionality (movability,
+    transparency, color themes, etc)
+  * I have a very bad feeling a complete rewrite might be in order
+
+08apr19
+  * rewrite done, now on to gradients and symbols
+  * needed next: FILL PATTERNS, markers
+  * also needed: path and lines helper functions
+  * note that an XML element may have several classes (space-separated
+    quotes), so that different kinds of functionality can be created
+    with appropriate class groups
+   
+08apr20
+  * more powerful generalizations for the group elemens macrofied
+  * I don't understand <marker ...> elements at all
+
+08may07
+  * markers work, even if I don't get them
+  * patterns work just dandy
+  * added a top-level DRAW* definition to throw a usage warning
+
+
+
+.
