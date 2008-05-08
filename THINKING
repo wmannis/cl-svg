@@ -47,4 +47,6 @@ References:
   * patterns work just dandy
   * added a top-level DRAW* definition to throw a usage warning
 
-
+08may08
+  * http://osku.de/svg/gui-examples/xypad.svg for trivial dragging
+  * <script /> and <style /> elements

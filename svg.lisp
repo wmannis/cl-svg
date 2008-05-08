@@ -27,6 +27,9 @@
 
 (in-package :cl-svg)
 
+(defvar *cr* (string #\Newline)
+  "convenience for string concatenation")
+
 ;;; Normally shape attributes should be checked - all the SVG viewers I've
 ;;; seen so far silently ignore shapes missing attributes.  I'd prefer to get
 ;;; some warning.  However, a shape can inherit missing attributes from,
@@ -216,6 +219,15 @@
 (defun comment (scene text)
   (add-element scene (concatenate 'string "<!-- " text " -->")))
 
+(defun script (scene script)
+  (add-element
+   scene
+   (concatenate 'string "<script><![CDATA[" *cr* script *cr* "]]></script>")))
+
+(defun style (scene css)
+  (add-element
+   scene
+   (concatenate 'string "<style type=\"text/css\">" *cr* css *cr* "</style>")))
 
 ;;; Grouping elements.  Many of the grouping elements have similar
 ;;; defining semantics: create the group, stuff in components, add
