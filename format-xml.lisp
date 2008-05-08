@@ -1,5 +1,5 @@
 ;;; -*- Mode: LISP; Syntax: Common-lisp; Package: cl-svg; Lowercase: Yes -*-
-;;; $Id: format-xml.lisp,v 1.1 2008-04-12 12:46:28-05 annis Exp annis $
+;;; $Id$
 ;;;
 ;;; Copyright (c) 2008 William S. Annis.  All rights reserved.
 ;;;

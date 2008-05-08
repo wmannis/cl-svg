@@ -1,6 +1,5 @@
 ;;; -*- mode: lisp; syntax: common-lisp; package: cl-svg; encoding: utf-8 -*-
-;;;
-;;; $Id: cl-svg.asd,v 1.1 2008-04-11 15:56:51-05 annis Exp annis $
+;;; $Id$
 ;;;
 ;;; Copyright (c) 2008 William S. Annis.  All rights reserved.
 ;;;
@@ -33,7 +32,7 @@
   :author "William S. Annis <wm.annis@gmail.com"
   :version "0.01"
   :maintainer "William S. Annis <wm.annis@gmail.com"
-  :licence "Artistic License"
+  :licence "MIT License"
   :description "Produce Scalable Vector Graphics (SVG) files"
 
   :components ((:file "package")

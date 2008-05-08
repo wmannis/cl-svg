@@ -1,5 +1,5 @@
 ;;; -*- Mode: LISP; Syntax: Common-lisp; Package: cl-svg; Lowercase: Yes -*-
-;;; $Id: svg.lisp,v 1.7 2008-04-20 11:01:02-05 annis Exp annis $
+;;; $Id$
 ;;;
 ;;; Copyright (c) 2008 William S. Annis.  All rights reserved.
 ;;;
@@ -108,9 +108,8 @@
   (format nil "url(#~A)" (element-id e)))
 
 (defmethod initialize-instance :after ((e svg-element) &key &allow-other-keys)
-  (let ((id (element-id e)))
-    (when (eql id :generate)
-      (setf (element-id e) (gensym (element-name e))))))
+  (when (eql (element-id e) :generate)
+    (setf (element-id e) (gensym (element-name e)))))
 
 
 (defclass svg-toplevel (svg-element)
@@ -199,7 +198,8 @@
      (funcall #'make-svg-element ,shape (append (list ,@params) (list ,@opts)))))
 
 (defun draw* (&rest x)
-  (error "DRAW* is only available with group definition macros."))
+  (declare (ignore x))
+  (error "DRAW* is only available within group definition macros."))
 
 (defun desc (scene text)
   "add a description to any SVG element"
@@ -237,7 +237,7 @@
             (add-defs-element ,canvas ,group)
             ,group)))))
 
-;;; Canned visual elements for multiple uses.
+;;; canned visual elements for multiple uses
 (define-element-maker :symbol "symbol" '(:id))
 (define-defs-group-maker make-svg-symbol :symbol)
 
