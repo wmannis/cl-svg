@@ -38,9 +38,12 @@
            #:desc
            #:title
            #:comment
+           #:script
+           #:style
            #:make-svg-symbol
            #:make-marker
            #:make-pattern
+           #:gradient-stop
            #:stop
            #:make-linear-gradient
            #:make-radial-gradient))
