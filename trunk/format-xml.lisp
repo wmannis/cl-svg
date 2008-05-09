@@ -64,7 +64,12 @@ for ~/pp-xml-attr/ use in a FORMAT string."))
            (:marker-width "markerWidth")
            (:marker-height "markerHeight")
            ((:ref-x :refx) "refX")
-           ((:ref-y :refy) "refY"))))
+           ((:ref-y :refy) "refY")
+           (:text-length "textLength")
+           (:start-offset "startOffset")
+           (:glyph-ref "glyphRef")
+           (:text-length "textLength")
+           (:length-adjust "lengthAdjust"))))
     (if translation
         translation
         (string-downcase (symbol-name kw)))))

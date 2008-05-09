@@ -190,7 +190,7 @@
 (define-element-maker :ellipse "ellipse" '(:cx :cy :rx :ry))
 (define-element-maker :circle "circle" '(:cx :cy :r))
 (define-element-maker :path "path" '(:d))
-(define-element-maker :using "use" '(:xlink-href))
+(define-element-maker :use "use" '(:xlink-href))
 
 ;;; The separation of PARAMS and OPTS has no representation in the 
 ;;; SVG-ELEMENT class, but provides a visual clue about required
@@ -228,6 +228,17 @@
   (add-element
    scene
    (concatenate 'string "<style type=\"text/css\">" *cr* css *cr* "</style>")))
+
+(define-element-maker :text "text" '(:x :y))
+(define-element-maker :tspan "tspan" '())
+;;; how should <tref> come into play?
+
+(defmacro text (scene (&rest params) text)
+  (let ((text-element (gensym "text")))
+    `(let ((,text-element (make-svg-element :text (list ,@params))))
+       (add-element ,scene ,text-element)
+       (add-element ,text-element ,text)
+       ,text-element)))
 
 ;;; Grouping elements.  Many of the grouping elements have similar
 ;;; defining semantics: create the group, stuff in components, add
