@@ -46,8 +46,8 @@
            #:gradient-stop
            #:stop
            #:make-linear-gradient
-           #:make-radial-gradient))
-
+           #:make-radial-gradient
+           #:make-group))
 
 ;;; package.lisp ends here
 

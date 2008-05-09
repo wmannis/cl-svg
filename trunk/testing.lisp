@@ -159,3 +159,17 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
               :fill (xlink-href pattern))
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
+
+;;; CSS stylings - mouse over the circles to change opacity - also
+;;; note that the group opacity setting is inherited by its elements.
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700)))
+  (title scene "CSS and Group test")
+  (style scene "circle:hover {fill-opacity: 0.9;}")
+  (make-group scene (:fill-opacity 0.6)
+    (draw* (:circle :cx 150 :cy 150 :r 125) :fill "red")
+    (draw* (:circle :cx 550 :cy 550 :r 125) :fill "green")
+    (draw* (:circle :cx 550 :cy 150 :r 125) :fill "orange")
+    (draw* (:circle :cx 150 :cy 550 :r 125) :fill "purple")
+    (draw* (:circle :cx 350 :cy 350 :r 225) :fill "blue"))
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
