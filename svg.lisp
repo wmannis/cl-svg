@@ -98,7 +98,7 @@
   (if (has-contents-p e)
       (with-xml-group-element (s (element-name e) (element-attributes e))
         (loop for sub-element across (element-contents e)
-             do (stream-out s sub-element)))
+              do (stream-out s sub-element)))
       (element->xml s (element-name e) (element-attributes e))))
 
 (defmethod stream-out (s (e string))
@@ -261,9 +261,22 @@
 (define-element-maker :pattern "pattern" '(:id))
 (define-defs-group-maker make-pattern :pattern)
 
+;;; Elements grouped together - these can go anywhere, not just <defs/>
+(define-element-maker :group "g" '())
+
+(defmacro make-group (scene (&rest opts) &body shapes)
+  (let ((group (gensym "group"))
+        (canvas (gensym "scene")))
+    `(let ((,group (make-svg-element :group (list ,@opts))) (,canvas ,scene))
+       (macrolet ((draw* (&rest args)
+                    `(draw ,',group ,@args)))
+         (progn ,@shapes)
+         (add-element ,canvas ,group)
+         ,group))))
+
 
 ;;; Gradients.
-(defun gradient-stop (&key color offset (opacity "1.0"))
+(defun gradient-stop (&key color offset (opacity 1.0))
   (apply #'make-instance
          (cons 'svg-element 
                (list :name "stop"
