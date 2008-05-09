@@ -238,15 +238,13 @@
 ;;; in place of DRAW.
 (defmacro define-defs-group-maker (macro-name element-name)
   `(defmacro ,macro-name (scene (&rest opts) &body shapes)
-     (let ((group (gensym "group"))
-           (canvas (gensym "scene")))
-       `(let ((,group (make-svg-element ,',element-name (list ,@opts)))
-              (,canvas ,scene))
+     (let ((group (gensym "group")))
+       `(let ((,group (make-svg-element ,',element-name (list ,@opts))))
           (macrolet ((draw* (&rest args)
                        `(draw ,',group ,@args)))
             (progn
               ,@shapes)
-            (add-defs-element ,canvas ,group)
+            (add-defs-element ,scene ,group)
             ,group)))))
 
 ;;; canned visual elements for multiple uses
@@ -265,13 +263,12 @@
 (define-element-maker :group "g" '())
 
 (defmacro make-group (scene (&rest opts) &body shapes)
-  (let ((group (gensym "group"))
-        (canvas (gensym "scene")))
-    `(let ((,group (make-svg-element :group (list ,@opts))) (,canvas ,scene))
+  (let ((group (gensym "group")))
+    `(let ((,group (make-svg-element :group (list ,@opts))))
        (macrolet ((draw* (&rest args)
                     `(draw ,',group ,@args)))
          (progn ,@shapes)
-         (add-element ,canvas ,group)
+         (add-element ,scene ,group)
          ,group))))
 
 
