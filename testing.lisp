@@ -88,7 +88,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
   ;;; Next, instantiate like mad.
   (dotimes (i 400)
     (let ((size (+ 5 (random 95))))
-      (draw scene (:using :xlink-href (xlink-href columns))
+      (draw scene (:use :xlink-href (xlink-href columns))
             :x (- (random 750) 25)
             :y (- (random 700) 25)
             :height size :width size
@@ -156,12 +156,11 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
                   (draw* (:rect :x 5 :y 5 :width 5 :height 5 :fill "lightblue")))))
   (comment scene "Just a quick fill test.")
   (draw scene (:rect :x 0 :y 0 :height "100%" :width "100%")
-              :fill (xlink-href pattern))
+               :fill (xlink-href pattern))
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
 
-;;; CSS stylings - mouse over the circles to change opacity - also
-;;; note that the group opacity setting is inherited by its elements.
+;;; CSS stylings, grouping and simple text
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700)))
   (title scene "CSS and Group test")
   (style scene "circle:hover {fill-opacity: 0.9;}")
@@ -171,5 +170,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
     (draw* (:circle :cx 550 :cy 150 :r 125) :fill "orange")
     (draw* (:circle :cx 150 :cy 550 :r 125) :fill "purple")
     (draw* (:circle :cx 350 :cy 350 :r 225) :fill "blue"))
+  (text scene (:x 290 :y 320) "Mouse over a circle")
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
+

@@ -40,6 +40,7 @@
            #:comment
            #:script
            #:style
+           #:text
            #:make-svg-symbol
            #:make-marker
            #:make-pattern
