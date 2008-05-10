@@ -84,14 +84,14 @@ for ~/pp-xml-attr/ use in a FORMAT string."))
 
 (defun element->xml (stream element properties)
   ;; FORMAT ~/ functions not in CL-USER have to state their package.
-  (format stream "~v,0T<~A ~@<~{~/cl-svg:pp-xml-attr/=\"~A\"~^ ~}~:@>/>~%"
+  (format stream "~v,0T<~A ~@<~{~/cl-svg:pp-xml-attr/=\"~A\"~^ ~}~:@>/>~&"
                  *indent-level* element properties))
 
 (defun string->xml (stream string)
-  (format stream "~v,0T~@<~A~:@>~%" *indent-level* string))
+  (format stream "~v,0T~@<~A~:@>~&" *indent-level* string))
 
 (defun begin-group->xml (stream element properties)
-  (format stream "~v,0T<~A~@<~{ ~/cl-svg:pp-xml-attr/=\"~A\"~}~:@>>~%"
+  (format stream "~v,0T<~A~@<~{ ~/cl-svg:pp-xml-attr/=\"~A\"~}~:@>>~&"
           *indent-level* element properties))
 
 (defun end-group->xml (stream element)

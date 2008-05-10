@@ -41,6 +41,7 @@
            #:script
            #:style
            #:text
+           #:tspan
            #:make-svg-symbol
            #:make-marker
            #:make-pattern

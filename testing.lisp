@@ -170,7 +170,9 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
     (draw* (:circle :cx 550 :cy 150 :r 125) :fill "orange")
     (draw* (:circle :cx 150 :cy 550 :r 125) :fill "purple")
     (draw* (:circle :cx 350 :cy 350 :r 225) :fill "blue"))
-  (text scene (:x 290 :y 320) "Mouse over a circle")
+  (text scene (:x 290 :y 320)
+    "Mouse over a "
+    (tspan (:fill "orange" :font-weight "bold") "circle"))
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
 
