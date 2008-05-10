@@ -1,7 +1,7 @@
 TODO:
   * figure out A cmd in pathing
   * helpers point and paths - i.e., approach svgfig
-  * need text elements next
+  * masks, images
 
 References:
   http://srufaculty.sru.edu/david.dailey/svg/SVGAnimations.htm - very good
@@ -51,3 +51,7 @@ References:
   * http://osku.de/svg/gui-examples/xypad.svg for trivial dragging
   * <script /> and <style /> elements
   * just plain ol' <g />
+
+08may10
+  * cleaning up the <text> mess
+

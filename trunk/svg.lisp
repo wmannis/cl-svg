@@ -229,16 +229,6 @@
    scene
    (concatenate 'string "<style type=\"text/css\">" *cr* css *cr* "</style>")))
 
-(define-element-maker :text "text" '(:x :y))
-(define-element-maker :tspan "tspan" '())
-;;; how should <tref> come into play?
-
-(defmacro text (scene (&rest params) text)
-  (let ((text-element (gensym "text")))
-    `(let ((,text-element (make-svg-element :text (list ,@params))))
-       (add-element ,scene ,text-element)
-       (add-element ,text-element ,text)
-       ,text-element)))
 
 ;;; Grouping elements.  Many of the grouping elements have similar
 ;;; defining semantics: create the group, stuff in components, add
@@ -270,7 +260,8 @@
 (define-element-maker :pattern "pattern" '(:id))
 (define-defs-group-maker make-pattern :pattern)
 
-;;; Elements grouped together - these can go anywhere, not just <defs/>
+
+;;; Inline groups - these can go anywhere, not just <defs/>.
 (define-element-maker :group "g" '())
 
 (defmacro make-group (scene (&rest opts) &body shapes)
@@ -283,6 +274,28 @@
          ,group))))
 
 
+;;; For text elements - TSPAN just spits out a string rather than insert
+;;; itself into the current scene to match the regular contents of TEXT.
+(defun compose-tspan (opts text)
+  (with-output-to-string (s)
+    (with-indentation   ; a little oogly, but better than nothing
+      (with-xml-group-element (s "tspan" opts)
+        (string->xml s text)))))
+
+(defmacro tspan ((&rest opts) text)
+  `(compose-tspan (list ,@opts) ,text))
+
+(define-element-maker :text "text" '(:x :y))
+
+(defmacro text (scene (&rest opts) &body elements)
+  (let ((group (gensym "group")))
+    `(let ((,group (make-svg-element :text (list ,@opts))))
+       (add-element ,scene ,group)
+       (dolist (element (list ,@elements))
+         (add-element ,group element))
+       ,group)))
+
+
 ;;; Gradients.
 (defun gradient-stop (&key color offset (opacity 1.0))
   (apply #'make-instance
@@ -293,8 +306,7 @@
                                        :offset offset)))))
 
 ;;; Within the body of a gradient definition STOP is available as an
-;;; abbreviation for GRADIENT-STOP.  It can hardly be some other sort
-;;; of stop in that context.
+;;; abbreviation for GRADIENT-STOP.
 (defmacro define-gradient-maker (macro-name element-name)
   `(defmacro ,macro-name (scene (&rest opts) &body stops)
      (let ((grad (gensym "gradient")))
@@ -311,6 +323,8 @@
 
 (define-element-maker :radial-gradient "radialGradient" '(:id :cx :cy :r))
 (define-gradient-maker make-radial-gradient :radial-gradient)
+
+;;; masks!
 
 
 ;;; svg.lisp ends here
