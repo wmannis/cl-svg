@@ -27,6 +27,7 @@
 
 (in-package :cl-svg)
 
+
 (defvar *cr* (string #\Newline)
   "convenience for string concatenation")
 
@@ -276,9 +277,10 @@
 
 ;;; For text elements - TSPAN just spits out a string rather than insert
 ;;; itself into the current scene to match the regular contents of TEXT.
+;;; This mangles XML pretty-printing somewhat.
 (defun compose-tspan (opts text)
   (with-output-to-string (s)
-    (with-indentation   ; a little oogly, but better than nothing
+    (with-indentation
       (with-xml-group-element (s "tspan" opts)
         (string->xml s text)))))
 
