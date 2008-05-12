@@ -216,24 +216,25 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
     (format nil "rgb(~{~A~^, ~})" (mapcar #'normalize-to-byte (list r g b)))))
 
 (defun root (canvas x y &optional (angle 0) (depth 5) (alpha 1.0) (decay 0.005))
-  (let ((w (* depth 9.0))
+  (let ((w (* depth 6.0))
         (angle1 angle)
+        (alpha1 alpha)
         (x1 x)
         (y1 y))
     ;(format t "at DEPTH ~A~&" depth)
-    (dotimes (i (* depth (random-range 2 11)))
+    (dotimes (i (* depth (random-range 10 20)))
       (let* ((v (/ depth 5.0))
-             (color (rgb  (* (- 0.8 v) 0.25)
+             (color (rgb  (- 0.8 (* v 0.25))
                           0.8
-                          (- 0.8 v)))
-             (alpha1 (max 0 (- alpha (* i 3 decay)))))
+                          (- 0.8 v))))
         (when (> alpha1 0)
-          (setf angle1 (+ angle (random-range -70 70)))
+          (setf alpha1 (max 0.0 (- alpha (* i 3 decay))))
+          (setf angle1 (+ angle (random-range -60 60)))
           (let ((dx (+ x1 (* (cos (radians angle1)) w)))
                 (dy (+ y1 (* (sin (radians angle1)) w)))
                 (group
                  (make-group canvas (:stroke color :fill color :opacity alpha1
-                                     :stroke-width (* depth 0.7)
+                                     :stroke-width (* depth 0.5)
                                      :fill-opacity (* alpha1 0.6)
                                      :stroke-linecap "round"))))
             ;; dropshadow
@@ -244,14 +245,14 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
             ;; node
             (draw group (:circle :cx x1 :cy y1 :r (/ w 4)))
             ;; random branch
-            (when (and (> depth 0) (> (random 1.0) 0.75))
+            (when (and (> depth 0) (> (random 1.0) 0.9))
               (root canvas x1 y1 (+ angle1 (random-range -60 60)) (1- depth) alpha1))
 
             (setf x1 dx
-                  y1 dy)))
+                  y1 dy)))))
 
-        (when (and (> depth 0) (> (random 1.0) 0.95))
-          (root canvas x1 y1 angle1 (1- depth) alpha1))))))
+        (when (and (> depth 0) (> (random 1.0) 0.9))
+          (root canvas x1 y1 angle1 (1- depth) alpha1))))
 
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
        (rg (make-radial-gradient scene (:id :generate
@@ -260,6 +261,6 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
              (stop :color "rgb(13, 15, 0)" :offset "100%"))))
   (draw scene (:rect :x 0 :y 0 :height "100%" :width "100%")
                :fill (xlink-href rg))
-  (root scene 350 350 (random 360) 5 1.0 0.04)
+  (root scene 350 350 (random 360) 6)
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
