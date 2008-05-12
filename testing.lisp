@@ -216,51 +216,48 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
     (format nil "rgb(~{~A~^, ~})" (mapcar #'normalize-to-byte (list r g b)))))
 
 (defun root (canvas x y &optional (angle 0) (depth 5) (alpha 1.0) (decay 0.005))
-  (let ((w (* depth 6.0))
-        (angle1 angle)
-        (alpha1 alpha)
-        (x1 x)
-        (y1 y))
+  (let ((w (* depth 6.0)))
     ;(format t "at DEPTH ~A~&" depth)
     (dotimes (i (* depth (random-range 10 20)))
       (let* ((v (/ depth 5.0))
              (color (rgb  (- 0.8 (* v 0.25))
                           0.8
                           (- 0.8 v))))
-        (when (> alpha1 0)
-          (setf alpha1 (max 0.0 (- alpha (* i 3 decay))))
-          (setf angle1 (+ angle (random-range -60 60)))
-          (let ((dx (+ x1 (* (cos (radians angle1)) w)))
-                (dy (+ y1 (* (sin (radians angle1)) w)))
+        (setf alpha (max 0.0 (- alpha (* i decay))))
+        ;;; CL will start to use exponential notation when alpha gets
+        ;;; very small, and SVG hates this.
+        (when (> alpha 0.00001)
+          (setf angle (+ angle (random-range -60 60)))
+          (let ((dx (+ x (* (cos (radians angle)) w)))
+                (dy (+ y (* (sin (radians angle)) w)))
                 (group
-                 (make-group canvas (:stroke color :fill color :opacity alpha1
+                 (make-group canvas (:stroke color :fill color :opacity alpha
                                      :stroke-width (* depth 0.5)
-                                     :fill-opacity (* alpha1 0.6)
+                                     :fill-opacity (* alpha 0.6)
                                      :stroke-linecap "round"))))
             ;; dropshadow
-            (draw group (:circle :cx (+ x1 depth 1) :cy (1- (+ y1 depth))
+            (draw group (:circle :cx (+ x depth 1) :cy (1- (+ y depth))
                          :r (/ w 3)) :stroke "none" :fill "black")
             ;; line segment to next position:
-            (draw group (:line :x1 x1 :y1 y1 :x2 dx :y2 dy))
+            (draw group (:line :x1 x :y1 y :x2 dx :y2 dy))
             ;; node
-            (draw group (:circle :cx x1 :cy y1 :r (/ w 4)))
+            (draw group (:circle :cx x :cy y :r (/ w 4)))
             ;; random branch
-            (when (and (> depth 0) (> (random 1.0) 0.9))
-              (root canvas x1 y1 (+ angle1 (random-range -60 60)) (1- depth) alpha1))
+            (when (and (> depth 0) (> (random 1.0) 0.85))
+              (root canvas x y (+ angle (random-range -60 60)) (1- depth) alpha))
+            (setf x dx
+                  y dy)))))
+        (when (and (> depth 0) (> (random 1.0) 0.7))
+          (root canvas x y angle (1- depth) alpha))))
 
-            (setf x1 dx
-                  y1 dy)))))
-
-        (when (and (> depth 0) (> (random 1.0) 0.9))
-          (root canvas x1 y1 angle1 (1- depth) alpha1))))
-
-(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
+                                 :viewbox "0 0 700 700"))
        (rg (make-radial-gradient scene (:id :generate
                                         :cx "50%" :cy "50%" :r "50%")
              (stop :color "rgb(32, 38, 0)" :offset "0%")
              (stop :color "rgb(13, 15, 0)" :offset "100%"))))
   (draw scene (:rect :x 0 :y 0 :height "100%" :width "100%")
                :fill (xlink-href rg))
-  (root scene 350 350 (random 360) 6)
+  (root scene 350 350 (random 360) 7)
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
