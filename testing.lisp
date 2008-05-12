@@ -176,3 +176,84 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
 
+;;; include image
+(let ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
+      (img-url "http://www.biostat.wisc.edu/~annis/granny/notes/therm.png"))
+  (title scene "image test")
+  (draw scene (:image :x 10 :y 10 :height 600 :width 600 :xlink-href img-url))
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
+
+;;; image with alpha mask
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
+       (img-url "http://www.biostat.wisc.edu/~annis/granny/notes/therm.png")
+       (grad1 (make-linear-gradient scene (:id :generate :x1 0 :y1 0
+                 :x2 500 :y2 500 :gradient-units "userSpaceOnUse")
+                (stop :color "white" :offset "0%" :opacity 0.0)
+                (stop :color "white" :offset "100%" :opacity 1.0)))
+       (mask1 (make-mask scene (:id "Mask1" :x 0 :y 0 :height 700 :width 700
+                 :mask-units "userSpaceOnUse")
+                (draw* (:rect :x "0%" :y "0%" :height "100%" :width "100%"
+                        :fill (xlink-href grad1))))))
+  (title scene "image with alpha mask")
+  (draw scene (:image :x 10 :y 10 :height 600 :width 600
+               :xlink-href img-url :mask (xlink-href mask1)))
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
+
+;;; Based on http://billmill.org/static/viewji/viewji.html which is in turn
+;;; based on http://nodebox.net/code/index.php/Superfolia_|_root_source_code 
+(defun radians (degrees)
+  (/ (* degrees 3.141592653589793) 180.0))
+
+(defun random-range (start end)
+  (+ start (random (- end start))))
+
+(defun rgb (r g b)
+  (flet ((normalize-to-byte (c)
+           (truncate (* c 255))))
+    (format nil "rgb(~{~A~^, ~})" (mapcar #'normalize-to-byte (list r g b)))))
+
+(defun root (canvas x y &optional (angle 0) (depth 5) (alpha 1.0) (decay 0.005))
+  (let ((w (* depth 9.0))
+        (angle1 angle)
+        (x1 x)
+        (y1 y))
+    ;(format t "at DEPTH ~A~&" depth)
+    (dotimes (i (* depth (random-range 5 10)))
+      (let* ((v (/ depth 5.0))
+             (color (rgb  (* (- 0.8 v) 0.25)
+                          0.8
+                          (- 0.8 v)))
+             (alpha1 (max 0 (- alpha (* i 4 decay)))))
+        (when (> alpha1 0)
+          (setf angle1 (+ angle (random-range -60 60)))
+          (let ((dx (+ x1 (* (cos (radians angle1)) w 1.5)))
+                (dy (+ y1 (* (sin (radians angle1)) w 1.5))))
+            ;; need to add dropshadow
+            ;; line segment to next position:
+            (draw canvas (:line :x1 x1 :y1 y1 :x2 dx :y2 dy)
+                          :stroke-opacity alpha1 :stroke color
+                          :opacity alpha1
+                          :stroke-width (1+ depth))
+            ;; node
+            (draw canvas (:circle :cx x1 :cy y1 :r (/ w 2))
+                          :opacity alpha1
+                          :fill color :fill-opacity (* alpha1 .6)
+                          :stroke-width (* (1+ depth) 0.25))
+            ;; random branch
+            (when (and (> depth 0) (> (random 1.0) 0.95))
+              (root canvas x1 y1 angle1 (1- depth) alpha1))
+
+            (setf x1 dx
+                  y1 dy)))
+
+        (when (> depth 0)
+          (root canvas x1 y1 angle1 (1- depth) alpha1))))))
+
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
+       ;; radial gradient fill
+       )
+  (root scene 350 150 90 3)
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
