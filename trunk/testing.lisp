@@ -201,9 +201,10 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
 
-;;; Based on http://billmill.org/static/viewji/viewji.html which is in turn
-;;; based on http://nodebox.net/code/index.php/Superfolia_|_root_source_code 
+;;; Based on http://billmill.org/static/viewji/viewji.html which is based in
+;;; turn on http://nodebox.net/code/index.php/Superfolia_|_root_source_code
 (defun radians (degrees)
+  ;; Using PI causes type promotion to DOUBLE-FLOAT, which SVG doesn't love.
   (/ (* degrees 3.141592653589793) 180.0))
 
 (defun random-range (start end)
@@ -220,40 +221,45 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
         (x1 x)
         (y1 y))
     ;(format t "at DEPTH ~A~&" depth)
-    (dotimes (i (* depth (random-range 5 10)))
+    (dotimes (i (* depth (random-range 2 11)))
       (let* ((v (/ depth 5.0))
              (color (rgb  (* (- 0.8 v) 0.25)
                           0.8
                           (- 0.8 v)))
-             (alpha1 (max 0 (- alpha (* i 4 decay)))))
+             (alpha1 (max 0 (- alpha (* i 3 decay)))))
         (when (> alpha1 0)
-          (setf angle1 (+ angle (random-range -60 60)))
-          (let ((dx (+ x1 (* (cos (radians angle1)) w 1.5)))
-                (dy (+ y1 (* (sin (radians angle1)) w 1.5))))
-            ;; need to add dropshadow
+          (setf angle1 (+ angle (random-range -70 70)))
+          (let ((dx (+ x1 (* (cos (radians angle1)) w)))
+                (dy (+ y1 (* (sin (radians angle1)) w)))
+                (group
+                 (make-group canvas (:stroke color :fill color :opacity alpha1
+                                     :stroke-width (* depth 0.7)
+                                     :fill-opacity (* alpha1 0.6)
+                                     :stroke-linecap "round"))))
+            ;; dropshadow
+            (draw group (:circle :cx (+ x1 depth 1) :cy (1- (+ y1 depth))
+                         :r (/ w 3)) :stroke "none" :fill "black")
             ;; line segment to next position:
-            (draw canvas (:line :x1 x1 :y1 y1 :x2 dx :y2 dy)
-                          :stroke-opacity alpha1 :stroke color
-                          :opacity alpha1
-                          :stroke-width (1+ depth))
+            (draw group (:line :x1 x1 :y1 y1 :x2 dx :y2 dy))
             ;; node
-            (draw canvas (:circle :cx x1 :cy y1 :r (/ w 2))
-                          :opacity alpha1
-                          :fill color :fill-opacity (* alpha1 .6)
-                          :stroke-width (* (1+ depth) 0.25))
+            (draw group (:circle :cx x1 :cy y1 :r (/ w 4)))
             ;; random branch
-            (when (and (> depth 0) (> (random 1.0) 0.95))
-              (root canvas x1 y1 angle1 (1- depth) alpha1))
+            (when (and (> depth 0) (> (random 1.0) 0.75))
+              (root canvas x1 y1 (+ angle1 (random-range -60 60)) (1- depth) alpha1))
 
             (setf x1 dx
                   y1 dy)))
 
-        (when (> depth 0)
+        (when (and (> depth 0) (> (random 1.0) 0.95))
           (root canvas x1 y1 angle1 (1- depth) alpha1))))))
 
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
-       ;; radial gradient fill
-       )
-  (root scene 350 150 90 3)
+       (rg (make-radial-gradient scene (:id :generate
+                                        :cx "50%" :cy "50%" :r "50%")
+             (stop :color "rgb(32, 38, 0)" :offset "0%")
+             (stop :color "rgb(13, 15, 0)" :offset "100%"))))
+  (draw scene (:rect :x 0 :y 0 :height "100%" :width "100%")
+               :fill (xlink-href rg))
+  (root scene 350 350 (random 360) 5 1.0 0.04)
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
