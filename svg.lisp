@@ -129,7 +129,7 @@
   ()
   (:default-initargs
      :name "svg"
-     :xml-header "<?xml version=\"1.1\" standalone=\"no\"?>"
+     :xml-header "<?xml version=\"1.0\" standalone=\"no\"?>"
      :doctype "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" 
   \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">"
      :attributes (list :version "1.1" :id "toplevel"
