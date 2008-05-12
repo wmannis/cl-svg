@@ -45,6 +45,7 @@
            #:make-svg-symbol
            #:make-marker
            #:make-pattern
+           #:make-mask
            #:gradient-stop
            #:stop
            #:make-linear-gradient

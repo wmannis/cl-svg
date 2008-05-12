@@ -191,6 +191,7 @@
 (define-element-maker :ellipse "ellipse" '(:cx :cy :rx :ry))
 (define-element-maker :circle "circle" '(:cx :cy :r))
 (define-element-maker :path "path" '(:d))
+(define-element-maker :image "image" '(:x :y :height :width :xlink-href))
 (define-element-maker :use "use" '(:xlink-href))
 
 ;;; The separation of PARAMS and OPTS has no representation in the 
@@ -260,6 +261,10 @@
 ;;; fill patterns
 (define-element-maker :pattern "pattern" '(:id))
 (define-defs-group-maker make-pattern :pattern)
+
+;;; alpha masks
+(define-element-maker :mask "mask" '(:id))
+(define-defs-group-maker make-mask :mask)
 
 
 ;;; Inline groups - these can go anywhere, not just <defs/>.
