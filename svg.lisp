@@ -331,7 +331,5 @@
 (define-element-maker :radial-gradient "radialGradient" '(:id :cx :cy :r))
 (define-gradient-maker make-radial-gradient :radial-gradient)
 
-;;; masks!
-
 
 ;;; svg.lisp ends here
