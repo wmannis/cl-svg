@@ -1,4 +1,7 @@
-;(in-package :cl-svg)
+(defpackage #:cl-svg-tests
+  (:use #:cl #:cl-svg))
+
+(in-package #:cl-svg-tests)
 
 (defun one-of (list)
   (nth (random (length list)) list))
@@ -178,7 +181,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
 
 ;;; include image
 (let ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
-      (img-url "http://www.biostat.wisc.edu/~annis/granny/notes/therm.png"))
+      (img-url "http://www.biostat.wisc.edu/~annis/kochab2.png"))
   (title scene "image test")
   (draw scene (:image :x 10 :y 10 :height 600 :width 600 :xlink-href img-url))
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
@@ -186,7 +189,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
 
 ;;; image with alpha mask
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
-       (img-url "http://www.biostat.wisc.edu/~annis/granny/notes/therm.png")
+       (img-url "http://www.biostat.wisc.edu/~annis/kochab2.png")
        (grad1 (make-linear-gradient scene (:id :generate :x1 0 :y1 0
                  :x2 500 :y2 500 :gradient-units "userSpaceOnUse")
                 (stop :color "white" :offset "0%" :opacity 0.0)
