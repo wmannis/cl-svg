@@ -28,7 +28,7 @@
 (in-package :asdf)
 
 (defsystem :cl-svg
-  :name "CL-SCG"
+  :name "CL-SVG"
   :author "William S. Annis <wm.annis@gmail.com"
   :version "0.01"
   :maintainer "William S. Annis <wm.annis@gmail.com"
@@ -36,6 +36,7 @@
   :description "Produce Scalable Vector Graphics (SVG) files"
 
   :components ((:file "package")
+               (:file "path")
                (:file "format-xml")
                (:file "svg"))
   :serial t)

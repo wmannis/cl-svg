@@ -1,7 +1,6 @@
 TODO:
   * figure out A cmd in pathing
   * helpers point and paths - i.e., approach svgfig
-  * images
 
 References:
   http://srufaculty.sru.edu/david.dailey/svg/SVGAnimations.htm - very good
@@ -57,3 +56,7 @@ References:
 
 08may12
   * trivial masks
+  * fiddling with pretty pictures
+
+08may13
+  * first, wretched pass at path helpers

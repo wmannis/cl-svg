@@ -109,13 +109,14 @@ for ~/pp-xml-attr/ use in a FORMAT string."))
          ,@body)
        (end-group->xml ,s ,e))))
 
-;;; FIX FIX FIX (make points sub-lists)
-(defun format-points (stream points)
+;;; Does this need some helpers to restrain precision that only
+;;; bloats the SVG size?
+(defun points (points)
   (let ((*print-pretty* t))
-    (format
-     stream
-     ;; The ~<... with closing ~:@> does paragraph filling.
-     "~@<~{~/cl-svg:format-truncate/,~/cl-svg:format-truncate/~^ ~}~:@>"
-     points)))
+    (if (> (length points) 10)
+        (format nil "~&~8T~@<~:{ ~A,~A~}~:@>" points)
+        ;; a small number of points doesn't need the full-on emprettying
+        (format nil "~:{ ~A,~A~}" points))))
+
 
 ;;; format-xml.lisp ends here
