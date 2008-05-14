@@ -36,6 +36,7 @@ a repetition of the this on its own if it keeps seeing points.")
   "Works with *PREVIOUS-PATH-INSTRUCTION* to decide if a path command
 needs to be expressed.")
 
+
 (defmacro with-path-instruction (instruction &body body)
   `(prog1
        (let ((*insert-instruction-p*
@@ -49,34 +50,36 @@ needs to be expressed.")
         (format nil "~A~{~A~^ ~}" instruction args)
         (format nil " ~{~A~^ ~}" args))))
 
-(defun assert-arity (instruction n args)
-  (let ((len (length args)))
-    (unless (= n len)
-      (error "~A requires ~A not ~A arguments: ~A" instruction n len args))))
+(defmacro define-path-instruction-pair (name instruction (&rest args))
+  (let ((draw-relative (intern (concatenate 'string (string name) "-R"))))
+    `(progn
+       (defun ,name (,@args)
+         (format-instruction ,instruction (list ,@args)))
+       (defun ,draw-relative (,@args)
+         (format-instruction ,(string-downcase `,instruction) (list ,@args))))))
 
-(defmacro define-path-instruction (name instruction arity)
-  `(defun ,name (&rest args)
-     (assert-arity ',name ,arity args)
-     (format-instruction ,instruction args)))
-    
-(define-path-instruction move-to "M" 2)
-(define-path-instruction move-to-r "m" 2)
-(define-path-instruction line-to "L" 2)
-(define-path-instruction line-to-r "l" 2)
-(define-path-instruction horizontal-to "H" 1)
-(define-path-instruction horizontal-to-r "h" 1)
-(define-path-instruction vertical-to "V" 1)
-(define-path-instruction vertical-to-r "v" 1)
-(define-path-instruction curve-to "C" 6)
-(define-path-instruction curve-to-r "c" 6)
-(define-path-instruction smooth-curve-to "S" 4)
-(define-path-instruction smooth-curve-to-r "s" 4)
-(define-path-instruction quadratic-curve-to "Q" 4)
-(define-path-instruction quadratic-curve-to-r "q" 4)
-(define-path-instruction smooth-quadratic-curve-to "T" 2)
-(define-path-instruction smooth-quadratic-curve-to-r "t" 2)
-(define-path-instruction arc-to "A" 7)
-(define-path-instruction arc-to-r "a" 7)
+(define-path-instruction-pair move-to "M" (x y))
+(define-path-instruction-pair line-to "L" (x y))
+(define-path-instruction-pair horizontal-to "H" (x))
+(define-path-instruction-pair vertical-to "V" (y))
+
+(define-path-instruction-pair curve-to "C"
+  (control-x1 control-y1 control-x2 control-y2 x y))
+
+(define-path-instruction-pair smooth-curve-to "S"
+  (control-x2 control-y2 x y))
+
+(define-path-instruction-pair quadratic-curve-to "Q"
+  (control-x1 control-y1 x y))
+
+(define-path-instruction-pair smooth-quadratic-curve-to "T" (x y))
+
+(define-path-instruction-pair arc-to "A"
+  (rx ry x-rotation large-arc-flag sweep-flag x y))
+
+(defun close-path ()
+  (format-instruction "z" ()))
+
 
 (defun make-path ()
   (make-array '(0) :element-type 'character :fill-pointer 0 :adjustable t))

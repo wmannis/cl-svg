@@ -51,27 +51,19 @@
            #:make-linear-gradient
            #:make-radial-gradient
            #:make-group
-           ;; The many path helpers
+           ;; the many path helpers
            #:make-path
            #:with-path
            #:path
-           #:move-to
-           #:move-to-r
-           #:line-to
-           #:line-to-r
-           #:horizontal-to
-           #:horizontal-to-r
-           #:vertical-to
-           #:vertical-to-r
-           #:curve-to
-           #:curve-to-r
-           #:smooth-curve-to
-           #:smooth-curve-to-r
-           #:quadratic-curve-to
-           #:quadratic-curve-to-r
-           #:smooth-quadratic-c
-           #:smooth-quadratic-cur
-           #:arc-to
-           #:arc-to-r))
+           #:move-to #:move-to-r
+           #:line-to #:line-to-r
+           #:horizontal-to #:horizontal-to-r
+           #:vertical-to #:vertical-to-r
+           #:curve-to #:curve-to-r
+           #:smooth-curve-to #:smooth-curve-to-r
+           #:quadratic-curve-to #:quadratic-curve-to-r
+           #:smooth-quadratic-curve-to #:smooth-quadratic-curve-to-r
+           #:arc-to #:arc-to-r
+           #:close-path))
 
 ;;; package.lisp ends here
