@@ -1,6 +1,6 @@
 TODO:
-  * figure out A cmd in pathing
-  * helpers point and paths - i.e., approach svgfig
+  * next, the scary part: javascript to enliven things
+
 
 References:
   http://srufaculty.sru.edu/david.dailey/svg/SVGAnimations.htm - very good
@@ -59,4 +59,7 @@ References:
   * fiddling with pretty pictures
 
 08may13
-  * first, wretched pass at path helpers
+  * first, wretched pass at path helpers, later improved; might need a
+    reworking, or I can announce in huge letters that only pathing
+    commands should be used within WITH-PATH and PATH
+

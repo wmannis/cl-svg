@@ -284,3 +284,26 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
                :fill "none" :stroke "blue" :stroke-width 5)
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
+
+;;; Some random curves.
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
+                                 :viewbox "0 0 700 700"))
+       (rg (make-radial-gradient scene (:id :generate
+                                        :cx "50%" :cy "50%" :r "50%")
+             (stop :color "rgb(32, 38, 0)" :offset "0%")
+             (stop :color "rgb(13, 15, 0)" :offset "100%")))
+       (curvy (make-path)))
+  (draw scene (:rect :x 0 :y 0 :height "100%" :width "100%")
+               :fill (xlink-href rg))
+  ;; get to the center
+  (with-path curvy
+    (move-to 350 350))
+  ;; set up the first reflection
+  (quadratic-curve-to (random 300) (random 300) (random 300) (random 300))
+  ;;; random walk
+  (dotimes (j 50)
+    (with-path curvy
+      (smooth-quadratic-curve-to (random 500) (random 500))))
+  (draw scene (:path :d curvy) :fill "none" :stroke "yellow")
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
