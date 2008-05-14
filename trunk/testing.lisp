@@ -264,3 +264,23 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
   (root scene 350 350 (random 360) 7)
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
+
+;;; paths - an example from the SVG spec
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
+                                 :viewbox "0 0 700 700")))
+  (title scene "Path test")
+  (draw scene (:path :d (path
+                          (move-to 100 400)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 25 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 50 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 75 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 100 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (vertical-to-r 50)))
+               :fill "none" :stroke "blue" :stroke-width 5)
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
