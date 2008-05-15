@@ -44,7 +44,7 @@ needs to be expressed.")
          ,@body)
      (setf *previous-path-instruction* ,instruction)))
 
-(defun format-instruction (instruction args)
+(defun format-instruction (instruction &rest args)
   (with-path-instruction instruction
     (if *insert-instruction-p*
         (format nil "~A~{~A~^ ~}" instruction args)
@@ -54,9 +54,9 @@ needs to be expressed.")
   (let ((draw-relative (intern (concatenate 'string (string name) "-R"))))
     `(progn
        (defun ,name (,@args)
-         (format-instruction ,instruction (list ,@args)))
+         (format-instruction ,instruction ,@args))
        (defun ,draw-relative (,@args)
-         (format-instruction ,(string-downcase `,instruction) (list ,@args))))))
+         (format-instruction ,(string-downcase `,instruction) ,@args)))))
 
 (define-path-instruction-pair move-to "M" (x y))
 (define-path-instruction-pair line-to "L" (x y))
