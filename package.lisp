@@ -52,6 +52,7 @@
            #:make-linear-gradient
            #:make-radial-gradient
            #:make-group
+           #:link
            ;; the many path helpers
            #:make-path
            #:with-path
