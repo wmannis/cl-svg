@@ -24,12 +24,8 @@
 ;;; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;;; SUCH DAMAGE.
 
-
 (in-package :cl-svg)
 
-
-(defvar *cr* (string #\Newline)
-  "convenience for string concatenation")
 
 ;;; Normally shape attributes should be checked - all the SVG viewers I've
 ;;; seen so far silently ignore shapes missing attributes.  I'd prefer to get
