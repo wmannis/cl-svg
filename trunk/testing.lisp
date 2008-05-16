@@ -310,10 +310,13 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
 
 ;;; Clicking on the middle rectangle exposes my vanity.
 (let ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 300 :width 300)))
+  (desc scene "clickable, linked element")
+  (style scene ".clickable:hover {stroke: purple};")
   (draw scene (:rect :x 5 :y 5 :height 30 :width 30))
   (link scene (:xlink-href "http://www.lingweenie.org/lisp/")
     (draw* (:rect :x 40 :y 40 :height 30 :width 30)
-           :stroke "blue" :stroke-width 1 :fill "yellow"))
+           :stroke "blue" :stroke-width 1 :fill "yellow"
+           :class "clickable"))
   (draw scene (:rect :x 75 :y 75 :height 30 :width 30)
         :fill "purple")
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
