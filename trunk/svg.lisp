@@ -279,6 +279,18 @@
          (add-element ,scene ,group)
          ,group))))
 
+;;; clicky-clicky
+(define-element-maker :link "a" '(:xlink-href))
+
+(defmacro link (scene (&rest opts) &body shapes)
+  (let ((link (gensym "link")))
+    `(let ((,link (make-svg-element :link (list ,@opts))))
+       (macrolet ((draw* (&rest args)
+                    `(draw ,',link ,@args)))
+         (progn ,@shapes)
+         (add-element ,scene ,link)
+         ,link))))
+
 
 ;;; For text elements - TSPAN just spits out a string rather than insert
 ;;; itself into the current scene to match the regular contents of TEXT.
