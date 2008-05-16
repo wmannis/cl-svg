@@ -33,6 +33,7 @@
            #:xlink-href
            #:svg-toplevel #:svg-1.1-toplevel
            #:make-svg-toplevel
+           #:add-element
            #:draw
            #:draw*
            #:desc
