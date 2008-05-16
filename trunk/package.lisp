@@ -28,7 +28,8 @@
 (defpackage :cl-svg
   (:nicknames :svg)
   (:use :common-lisp)
-  (:export #:without-attribute-check
+  (:export #:*indent-spacing*
+           #:without-attribute-check
            #:stream-out
            #:xlink-href
            #:svg-toplevel #:svg-1.1-toplevel
@@ -53,6 +54,14 @@
            #:make-radial-gradient
            #:make-group
            #:link
+           ;; transformations
+           #:transform
+           #:scale
+           #:translate
+           #:rotate
+           #:skew-x
+           #:skew-y
+           #:matrix
            ;; the many path helpers
            #:make-path
            #:with-path

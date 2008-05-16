@@ -83,10 +83,15 @@
 (defmethod push-attribute ((e svg-element) attribute value)
   (setf (getf (element-attributes e) attribute) value))
 
-;;;(defgeneric has-attribute-p (element attribute))
-;;;
-;;;(defmethod has-attribute-p ((e svg-element) attribute)
-;;;  (member attribute (element-attributes e))) 
+(defgeneric has-attribute-p (element attribute))
+
+(defmethod has-attribute-p ((e svg-element) attribute)
+  (member attribute (element-attributes e))) 
+
+(defgeneric get-attribute (element attribute))
+
+(defmethod get-attribute ((element svg-element) attribute)
+  (getf (element-attributes element) attribute))
 
 (defgeneric has-contents-p (element))
 
@@ -198,9 +203,12 @@
 ;;; SVG-ELEMENT class, but provides a visual clue about required
 ;;; attributes.  However, the idiom is used in other elements where
 ;;; the separation *does* matter (see the gradients below).
+;;; Returns the element drawn, mostly to accomodoate TRANSFORM.
 (defmacro draw (scene (shape &rest params) &rest opts)
-  `(add-element ,scene
-     (funcall #'make-svg-element ,shape (append (list ,@params) (list ,@opts)))))
+  (let ((element (gensym)))
+    `(let ((,element (funcall #'make-svg-element ,shape (append (list ,@params) (list ,@opts)))))
+       (add-element ,scene ,element)
+       ,element)))
 
 (defun draw* (&rest x)
   (declare (ignore x))
@@ -222,14 +230,19 @@
   (add-element scene (concatenate 'string "<!-- " text " -->")))
 
 (defun script (scene script)
-  (add-element
-   scene
-   (concatenate 'string "<script><![CDATA[" *cr* script *cr* "]]></script>")))
+  "add inline javascript to a scene"
+  (let ((script-element (make-instance 'svg-element :name "script")))
+    (add-element script-element "<![CDATA[")
+    (add-element script-element script)
+    (add-element script-element "]]>")
+    (add-element scene script-element)))
 
 (defun style (scene css)
-  (add-element
-   scene
-   (concatenate 'string "<style type=\"text/css\">" *cr* css *cr* "</style>")))
+  "add inline CSS to a scene"
+  (let ((style-element
+         (make-instance 'svg-element :name "style" :type "text/css")))
+    (add-element style-element css)
+    (add-element scene style-element)))
 
 
 ;;; Grouping elements.  Many of the grouping elements have similar
@@ -268,28 +281,23 @@
 
 
 ;;; Inline groups - these can go anywhere, not just <defs/>.
-(define-element-maker :group "g" '())
+(defmacro define-toplevel-group-maker (macro-name element-name)
+  `(defmacro ,macro-name (scene (&rest opts) &body shapes)
+     (let ((group (gensym "group")))
+       `(let ((,group (make-svg-element ,',element-name (list ,@opts))))
+          (macrolet ((draw* (&rest args)
+                       `(draw ,',group ,@args)))
+            (progn
+              ,@shapes)
+            (add-element ,scene ,group)
+            ,group)))))
 
-(defmacro make-group (scene (&rest opts) &body shapes)
-  (let ((group (gensym "group")))
-    `(let ((,group (make-svg-element :group (list ,@opts))))
-       (macrolet ((draw* (&rest args)
-                    `(draw ,',group ,@args)))
-         (progn ,@shapes)
-         (add-element ,scene ,group)
-         ,group))))
+(define-element-maker :group "g" '())
+(define-toplevel-group-maker make-group :group)
 
 ;;; clicky-clicky
 (define-element-maker :link "a" '(:xlink-href))
-
-(defmacro link (scene (&rest opts) &body shapes)
-  (let ((link (gensym "link")))
-    `(let ((,link (make-svg-element :link (list ,@opts))))
-       (macrolet ((draw* (&rest args)
-                    `(draw ,',link ,@args)))
-         (progn ,@shapes)
-         (add-element ,scene ,link)
-         ,link))))
+(define-toplevel-group-maker link :link)
 
 
 ;;; For text elements - TSPAN just spits out a string rather than insert
@@ -342,6 +350,55 @@
 
 (define-element-maker :radial-gradient "radialGradient" '(:id :cx :cy :r))
 (define-gradient-maker make-radial-gradient :radial-gradient)
+
+
+;;; Transformations.  The 'transform' attribute string can contain as many
+;;; of these as you like, including repeats which are combined (i.e., another
+;;; rotate(d,x,y) doesn't override previous rotates, but is just tacked onto
+;;; the accumulating transformations).
+;;; http://www.w3.org/TR/SVG11/coords.html#TransformAttribute
+(defgeneric add-transform (element transform)
+  (:documentation "push a transformation into an element"))
+
+(defmethod add-transform ((element svg-element) (transform string))
+  (if (has-attribute-p element :transform)
+      (push-attribute element :transform
+        (concatenate 'string (get-attribute element :transform) " " transform))
+      (push-attribute element :transform transform)))
+
+(defun scale (sx &optional sy)
+  (if sy
+      (format nil "scale(~A, ~A)" sx sy)
+      (format nil "scale(~A)" sx)))
+
+(defun translate (tx &optional ty)
+  (if ty
+      (format nil "translate(~A, ~A)" tx ty)
+      (format nil "translate(~A)" tx)))
+
+(defun rotate (angle &optional (cx 0) (cy 0))
+  (format nil "rotate(~A, ~A, ~A)" angle cx cy))
+
+(defun skew-x (angle)
+  (format nil "skewX(~A)" angle))
+
+(defun skew-y (angle)
+  (format nil "skewY(~A)" angle))
+
+(defun matrix (a b c d e f)
+  (format nil "matrix(~A,~A,~A,~A,~A,~A)" a b c d e f))
+
+;;; Will accept a single transformation simply or nested ones:
+;;; (TRANSFORM (scale 3) (draw ...))     or
+;;; (TRANSFORM ((scale 4) (rotate 90)) (draw ...))
+(defmacro transform ((&rest transs) &body element)
+  (if (atom (first transs))
+      `(add-transform ,@element ,transs)
+      (let ((trans (gensym))
+            (e (gensym)))
+        `(let ((,e ,@element))
+           (dolist (,trans (list ,@transs))
+             (add-transform ,e ,trans))))))
 
 
 ;;; svg.lisp ends here
