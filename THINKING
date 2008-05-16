@@ -1,6 +1,6 @@
 TODO:
-  * next, the scary part: javascript to enliven things
-
+  * soon, the scary part: javascript to enliven things
+  * also, sensible TRANSFORM attrubute munging is in order
 
 References:
   http://srufaculty.sru.edu/david.dailey/svg/SVGAnimations.htm - very good
@@ -62,4 +62,9 @@ References:
   * first, wretched pass at path helpers, later improved; might need a
     reworking, or I can announce in huge letters that only pathing
     commands should be used within WITH-PATH and PATH
+
+08may15
+  * small tweaks, added LINK for clickable, linked items
+  * need to work more on the PATH interface - it could be smarter
+    about line breaks
 
