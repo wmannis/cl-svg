@@ -1,6 +1,5 @@
 TODO:
   * soon, the scary part: javascript to enliven things
-  * also, sensible TRANSFORM attrubute munging is in order
 
 References:
   http://srufaculty.sru.edu/david.dailey/svg/SVGAnimations.htm - very good
@@ -68,3 +67,7 @@ References:
   * need to work more on the PATH interface - it could be smarter
     about line breaks
 
+08may17
+  * transformations added over the last few days; some cleanup and a
+    few more docstrings, but actual documentation is in order now
+  * the GUI stuff may belong in an entirely different library

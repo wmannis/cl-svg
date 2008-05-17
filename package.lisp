@@ -29,12 +29,15 @@
   (:nicknames :svg)
   (:use :common-lisp)
   (:export #:*indent-spacing*
+           #:*float-format-precision*
            #:without-attribute-check
+           #:missing-attributes
            #:stream-out
            #:xlink-href
            #:svg-toplevel #:svg-1.1-toplevel
            #:make-svg-toplevel
            #:add-element
+           #:add-class
            #:draw
            #:draw*
            #:desc
