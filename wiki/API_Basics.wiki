@@ -13,15 +13,27 @@ the resulting somewhat, especially if it contains deeply nested
 elements.  The formatting depends on your Lisp correctly implementing
 the *`~<`* directive.
 
+For more info on SVG see the [http://www.w3.org/TR/SVG11/ 1.1]
+Specification.  W3 Schools also has a good
+[http://www.w3schools.com/svg/default.asp tutorial].
+
+== Attribute Handling ==
+
 The library also does some extra sanity-checking on attributes.  When
 an SVG shape element is missing certain attributes SVG viewers will
 simply ignore the element.  Most of the time I want to know if I've
 missed a necessary attribute.  There are, however, situations where
-missing attributes can be inherited from an enclosing SVG element.  
+missing attributes can be inherited from an enclosing SVG element.
+The macro *`WITHOUT-ATTRIBUTE-CHECK`* allows you to tell the library
+to not check for missing attributes when necessary.
 
-For more info see the SVG [http://www.w3.org/TR/SVG11/ 1.1]
-Specification.  W3 Schools also has a good
-[http://www.w3schools.com/svg/default.asp tutorial].
+The authors of the SVG spec were evidently unable to decide between
+naming attributes with lisp-style `dashed-names` or using `camelCase`.
+This library will happily accept attribute names like `:marker-units`
+and will convert that to `markerUnits` in the SVG output.  Because the
+SVG standard is a mish-mash in that regard this behavior is
+table-driven.  If I've missed any attributes you can also use strings
+as attribute names.
 
 
 == The Package ==
@@ -63,6 +75,15 @@ _function_
  Creates the highest-level SVG container.  The first argument is a quoted
  class representing an SVG version.  At the moment the only option 
  is *`svg-1.1-toplevel`* (as of May 2008 version 1.2 is still in the
- works).  The attributes are keyword/value pairs, of which you need a
+ works).  The attributes are keyword/value pairs, of which you need at
  the very least to specify *`:height`* and *`:width`*.
+
+{{{
+(let ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 300 :width 300)))
+  (draw scene (:rect :x 5 :y 5 :height 30 :width 30))
+...
+}}}
+
+
+== Drawing Shape Elements ==
 
