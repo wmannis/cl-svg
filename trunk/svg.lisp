@@ -39,6 +39,11 @@
   `(let ((*check-required-attributes* nil))
      ,@body))
 
+(define-condition missing-attributes ()
+  ((message :initarg :message :accessor missing-attribute-message))
+  (:report (lambda (condition stream)
+             (format stream (missing-attribute-message condition)))))
+
 
 (defclass svg-element ()
   ((name
@@ -93,6 +98,29 @@
 
 (defmethod has-contents-p ((element svg-element))
   (/= 0 (fill-pointer (element-contents element))))
+
+;;; See TRANSFORM macro below.
+(defgeneric add-transform (element transform)
+  (:documentation
+   "Push a transformation into an element.  If the property already has
+contents the new transform is simply appended."))
+
+(defmethod add-transform ((element svg-element) (transform string))
+  (if (has-attribute-p element :transform)
+      (push-attribute element :transform
+        (concatenate 'string (get-attribute element :transform) " " transform))
+      (push-attribute element :transform transform)))
+
+(defgeneric add-class (element class)
+  (:documentation
+   "Push an XML class into an element.  If the property already has
+contents the new transform is simply appended."))
+
+(defmethod add-class ((element svg-element) (class string))
+  (if (has-attribute-p element :class)
+      (push-attribute element :class
+        (concatenate 'string (get-attribute element :class) " " class))
+      (push-attribute element :class class)))
 
 (defgeneric stream-out (stream element))
 
@@ -179,7 +207,7 @@
              (setf ok nil)
              (push required missing)))
          (unless ok
-           (error "~A missing attributes: ~{~A~^ ~}" ,element missing))))
+           (error 'missing-attributes :message (format nil "~A missing attributes: ~{~A~^ ~}" ,element missing)))))
      (defmethod make-svg-element ((element (eql ,element)) attributes)
        (when *check-required-attributes*
          (assert-required-attributes element attributes))
@@ -353,15 +381,6 @@
 ;;; rotate(d,x,y) doesn't override previous rotates, but is just tacked onto
 ;;; the accumulating transformations).
 ;;; http://www.w3.org/TR/SVG11/coords.html#TransformAttribute
-(defgeneric add-transform (element transform)
-  (:documentation "push a transformation into an element"))
-
-(defmethod add-transform ((element svg-element) (transform string))
-  (if (has-attribute-p element :transform)
-      (push-attribute element :transform
-        (concatenate 'string (get-attribute element :transform) " " transform))
-      (push-attribute element :transform transform)))
-
 (defun scale (sx &optional sy)
   (if sy
       (format nil "scale(~A, ~A)" sx sy)
@@ -387,13 +406,13 @@
 ;;; Will accept a single transformation simply or nested ones:
 ;;; (TRANSFORM (scale 3) (draw ...))     or
 ;;; (TRANSFORM ((scale 4) (rotate 90)) (draw ...))
-(defmacro transform ((&rest transs) &body element)
-  (if (atom (first transs))
-      `(add-transform ,@element ,transs)
+(defmacro transform ((&rest transformations) &body element)
+  (if (atom (first transformations))
+      `(add-transform ,@element ,transformations)
       (let ((trans (gensym))
             (e (gensym)))
         `(let ((,e ,@element))
-           (dolist (,trans (list ,@transs))
+           (dolist (,trans (list ,@transformations))
              (add-transform ,e ,trans))))))
 
 

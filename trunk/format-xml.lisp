@@ -33,6 +33,11 @@
 
 (defvar *indent-spacing* 2)
 
+(defvar *float-format-precision* 2
+  "Constrains how many digits are printed after the decimal point in XML
+attribute values.")
+
+
 (defmacro with-indentation (&body body)
   `(let ((*indent-level* (+ *indent-level* *indent-spacing*)))
      ,@body))
@@ -42,6 +47,12 @@
   (:documentation "This turns a keyword slot of a p-list into something XML
 will recognize, in particular making the case correct.  It is intended
 for ~/pp-xml-attr/ use in a FORMAT string."))
+
+(defgeneric pp-xml-value (stream value &optional colon-p at-p)
+  (:documentation "This function exists entirely to restrain the floating
+point representation in the SVG, which is bloated by pointless precision.
+*FLOAT-FORMAT-PRECISION* (2, by default) determines how many digits are
+printed after the decimal point."))
 
 ;;; Some of these keyword name transformations could be done
 ;;; programatically, but there are enough oddities that this wouldn't
@@ -84,17 +95,34 @@ for ~/pp-xml-attr/ use in a FORMAT string."))
   (declare (ignore colon-p at-p))
   (format s "~A" kw))
 
+(defmethod pp-xml-value ((s stream) value &optional colon-p at-p)
+  (declare (ignore colon-p at-p))
+  (format s "~A" value))
+
+(defmethod pp-xml-value ((s stream) (value float) &optional colon-p at-p)
+  (declare (ignore colon-p at-p))
+  (format s "~v$" *float-format-precision* value))
+
+
 (defun element->xml (stream element properties)
   ;; FORMAT ~/ functions not in CL-USER have to state their package.
-  (format stream "~v,0T<~A ~@<~{~/cl-svg:pp-xml-attr/=\"~A\"~^ ~}~:@>/>~&"
-                 *indent-level* element properties))
+  (format
+   stream
+   "~v,0T<~A ~@<~{~/cl-svg:pp-xml-attr/=\"~/cl-svg:pp-xml-value/\"~^ ~}~:@>/>~&"
+   *indent-level*
+   element
+   properties))
 
 (defun string->xml (stream string)
   (format stream "~v,0T~@<~A~:@>~&" *indent-level* string))
 
 (defun begin-group->xml (stream element properties)
-  (format stream "~v,0T<~A~@<~{ ~/cl-svg:pp-xml-attr/=\"~A\"~}~:@>>~&"
-          *indent-level* element properties))
+  (format
+   stream
+   "~v,0T<~A~@<~{ ~/cl-svg:pp-xml-attr/=\"~/cl-svg:pp-xml-value/\"~}~:@>>~&"
+   *indent-level*
+   element
+   properties))
 
 (defun end-group->xml (stream element)
   (format stream "~v,0T</~A>~&" *indent-level* element))

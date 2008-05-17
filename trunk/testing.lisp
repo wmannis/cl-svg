@@ -207,7 +207,8 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
 ;;; Based on http://billmill.org/static/viewji/viewji.html which is based in
 ;;; turn on http://nodebox.net/code/index.php/Superfolia_|_root_source_code
 (defun radians (degrees)
-  ;; Using PI causes type promotion to DOUBLE-FLOAT, which SVG doesn't love.
+  ;;; SVG doesn't like exponential notation in many places, so I avoid
+  ;;; the DOUBLE-FLOAT PI.
   (/ (* degrees 3.141592653589793) 180.0))
 
 (defun random-range (start end)
@@ -320,5 +321,52 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
   (transform ((rotate 45 90 90) (translate -13))
     (draw scene (:rect :x 75 :y 75 :height 30 :width 30)
           :fill "purple"))
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
+
+
+;;; More pictures: tendrils, just a way to play with some transformations.
+;;; Inspired by: http://nodebox.net/code/index.php/Tendrils
+(defun make-tendril (x y width length &key (step 1.0) (omega 3))
+  (let ((angle (random 360))
+        (rotation (random 360))
+        (rx (* width 1.0))
+        (ry (* width 0.50))
+        (c 0)
+        (n 0.0))
+    #'(lambda (canvas &key (distance 3.0))
+        (when (< n length)
+          (incf n)
+          (transform (rotate rotation x y)
+            (draw canvas (:ellipse :cx x :cy y :rx rx :ry ry)
+                          :stroke-opacity (* 0.8 (/ n length))))
+          (setf rotation (mod (+ rotation omega) 360))
+          (incf x (* (cos (radians angle)) distance))
+          (incf y (* (sin (radians angle)) distance))
+          (setf rx (* width (- 1 (/ n length)))
+                ry (* rx 0.50))
+          (incf c (random-range (- step) step))
+          (incf angle c)))))
+
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
+                                 :viewbox "0 0 700 700"))
+       (rg (make-radial-gradient scene (:id :generate
+                                        :cx "50%" :cy "50%" :r "50%")
+             (stop :color "rgb(32, 38, 0)" :offset "0%")
+             (stop :color "rgb(13, 15, 0)" :offset "100%"))))
+  (draw scene (:rect :x 0 :y 0 :height "100%" :width "100%")
+               :fill (xlink-href rg))
+  ;;; The styled group has to come here, otherwise the background gets
+  ;;; drawn on top of the tendrils.
+  (let ((style-group (make-group scene (:stroke "rgb(220,250,200)" :fill "none"))))
+    (dotimes (i 12)
+      (let ((tendril (make-tendril 350 350 15 200)))
+        (dotimes (j 200)
+          (funcall tendril style-group))))
+    ;;; a few bigger ones
+    (dotimes (i 3)
+      (let ((tendril (make-tendril 350 350 20 300)))
+        (dotimes (j 300)
+          (funcall tendril style-group :distance 2)))))
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
