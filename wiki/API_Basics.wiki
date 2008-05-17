@@ -19,8 +19,8 @@ simply ignore the element.  Most of the time I want to know if I've
 missed a necessary attribute.  There are, however, situations where
 missing attributes can be inherited from an enclosing SVG element.  
 
-For more info see the [http://www.w3.org/TR/SVG11/ SVG 1.1
-Specification].  W3 Schools also has a good
+For more info see the SVG [http://www.w3.org/TR/SVG11/ 1.1]
+Specification.  W3 Schools also has a good
 [http://www.w3schools.com/svg/default.asp tutorial].
 
 
@@ -59,10 +59,10 @@ _special variable_
 == SVG Toplevel ==
 
 _function_
-*`make-svg-toplevel`* _`class &rest attributes` => svg-toplevel object_
+*`make-svg-toplevel`*  _`class &rest attributes` => svg-toplevel object_
  Creates the highest-level SVG container.  The first argument is a quoted
- class representing an SVG version.  At the moment the only option is 
- *`svg-1.1-toplevel`* (as of May 2008 version 1.2 is still in the
+ class representing an SVG version.  At the moment the only option 
+ is *`svg-1.1-toplevel`* (as of May 2008 version 1.2 is still in the
  works).  The attributes are keyword/value pairs, of which you need a
  the very least to specify *`:height`* and *`:width`*.
 
