@@ -1,3 +1,68 @@
 #summary Package information, getting started and drawing basic shapes
 
-Wahoo.
+= Introduction =
+
+This library is not designed to provide full access to every corner of
+SVG functionality.  For that you are better off using a complete XML
+library.  My purpose with this library is to make it easy to create
+SVG files that don't need to do anything too exotic.  All the shapes
+and grouping elements are provided.
+
+The library aims to produce readable XML.  This inflates the size of
+the resulting somewhat, especially if it contains deeply nested
+elements.  The formatting depends on your Lisp correctly implementing
+the *`~<`* directive.
+
+The library also does some extra sanity-checking on attributes.  When
+an SVG shape element is missing certain attributes SVG viewers will
+simply ignore the element.  Most of the time I want to know if I've
+missed a necessary attribute.  There are, however, situations where
+missing attributes can be inherited from an enclosing SVG element.  
+
+For more info see the [http://www.w3.org/TR/SVG11/ SVG 1.1
+Specification].  W3 Schools also has a good
+[http://www.w3schools.com/svg/default.asp tutorial].
+
+
+== The Package ==
+
+The package name is *`:cl-svg`* with a single nickname, *`:svg`*.
+
+It depends on no other libraries.
+
+== Conditions and Restarts ==
+
+_condition_
+*`missing-attributes`*
+  Is signaled when the required attributes of an element are missing.
+  If you're sure you don't need the missing attributes, you can skip
+  the check with the macro *`WITHOUT-ATTRIBUTE-CHECK`*
+
+There are no restarts.
+
+== Global Variables ==
+
+_special variable_
+*`*float-format-precision*`*
+  Controls how many digits after the decimal place to print in SVG
+  element attributes.  It defaults to 2.  Highly precise floating
+  point numbers for coordinates, etc., serve little purpose but to
+  inflate the size of the SVG file.
+
+_special variable_
+*`*indent-spacing*`*
+  Controls how many spaces to indend at each level of XML nesting.  It
+  defaults to 2.  Set it to zero for no indentation.
+
+
+
+== SVG Toplevel ==
+
+_function_
+*`make-svg-toplevel`* _`class &rest attributes` => svg-toplevel object_
+ Creates the highest-level SVG container.  The first argument is a quoted
+ class representing an SVG version.  At the moment the only option is 
+ *`svg-1.1-toplevel`* (as of May 2008 version 1.2 is still in the
+ works).  The attributes are keyword/value pairs, of which you need a
+ the very least to specify *`:height`* and *`:width`*.
+
