@@ -31,7 +31,7 @@ The authors of the SVG spec were evidently unable to decide between
 naming attributes with lisp-style `dashed-names` or using `camelCase`.
 This library will happily accept attribute names like `:marker-units`
 and will convert that to `markerUnits` in the SVG output.  Because the
-SVG standard is a mish-mash in that regard this behavior is
+SVG standard is a mish-mash in this regard the name conversion is
 table-driven.  If I've missed any attributes you can also use strings
 as attribute names.
 
