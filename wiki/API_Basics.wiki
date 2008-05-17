@@ -1,0 +1,3 @@
+#summary Package information, getting started and drawing basic shapes
+
+Wahoo.
