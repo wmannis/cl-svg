@@ -36,6 +36,7 @@
            #:xlink-href
            #:svg-toplevel #:svg-1.1-toplevel
            #:make-svg-toplevel
+           #:add-stylesheet
            #:add-element
            #:add-class
            #:draw

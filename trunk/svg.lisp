@@ -177,6 +177,12 @@ contents the new transform is simply appended."))
 (defmethod add-defs-element ((svg svg-toplevel) e)
   (add-element (svg-defs svg) e))
 
+(defgeneric add-stylesheet (svg-toplevel url))
+
+(defmethod add-stylesheet ((svg svg-toplevel) url)
+  (with-slots (stylesheets) svg
+    (setf stylesheets (append stylesheets (cons url ())))))
+
 ;;; This aims for more civilized and readable output.
 (defmethod stream-out (s (e svg-toplevel))
   (format s "~A~&" (slot-value e 'xml-header))
@@ -227,7 +233,8 @@ contents the new transform is simply appended."))
 ;;; SVG-ELEMENT class, but provides a visual clue about required
 ;;; attributes.  However, the idiom is used in other elements where
 ;;; the separation *does* matter (see the gradients below).
-;;; Returns the element drawn, mostly to accomodoate TRANSFORM.
+;;; Returns the element drawn, mostly to accomodoate TRANSFORM, though
+;;; you can add DESC or TITLE to shape elements, too.
 (defmacro draw (scene (shape &rest params) &rest opts)
   (let ((element (gensym)))
     `(let ((,element (funcall #'make-svg-element ,shape (append (list ,@params) (list ,@opts)))))
