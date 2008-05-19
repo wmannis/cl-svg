@@ -70,6 +70,11 @@ _special variable_
 
 == SVG Toplevel ==
 
+The *`svg-toplevel`* class (never accessed directly) handles XML
+boilerplate as well as providing the outermost XML container for all
+the graphical and support elements.
+
+
 _function_
 *`make-svg-toplevel`*  _`class &rest attributes` => svg-toplevel object_
  Creates the highest-level SVG container.  The first argument is a quoted
@@ -78,11 +83,20 @@ _function_
  works).  The attributes are keyword/value pairs, of which you need at
  the very least to specify *`:height`* and *`:width`*.
 
+ The `xmlns` and `xmlns:xlink` namespace attributes are included by
+ default. 
+
 {{{
 (let ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 300 :width 300)))
   (draw scene (:rect :x 5 :y 5 :height 30 :width 30))
 ...
 }}}
+
+_generic function_
+*`add-stylesheet`*  _`svg-toplevel stylesheet-url`_
+ Adds an XML stylesheet URL to the SVG file.  CSS may also be added
+ inline with the function *`style`*.
+
 
 
 == Drawing Shape Elements ==
