@@ -33,7 +33,15 @@ This library will happily accept attribute names like `:marker-units`
 and will convert that to `markerUnits` in the SVG output.  Because the
 SVG standard is a mish-mash in this regard the name conversion is
 table-driven.  If I've missed any attributes you can also use strings
-as attribute names.
+instead of keywords as attribute names.
+
+Finally, within SVG itself it is common to refer to other elements.
+This is usually handled by referring to the element's `id` property.
+Searching for what you want using some other property requires
+Javascript.  Using *`:id :generate`* in element creation will result
+in a random string for the `id` property, which you may extract with
+the generic function `xlink-href`.  See the gradient or symbol
+examples for expected use patterns.
 
 
 == The Package ==
@@ -84,7 +92,8 @@ _function_
  the very least to specify *`:height`* and *`:width`*.
 
  The `xmlns` and `xmlns:xlink` namespace attributes are included by
- default. 
+ default.  The property `id` is set to `toplevel` unless you specify
+ something else.
 
 {{{
 (let ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 300 :width 300)))
@@ -100,4 +109,26 @@ _generic function_
 
 
 == Drawing Shape Elements ==
+
+The syntax of the shape drawing macro is meant to highlight those
+properties which must be defined for the shape to be rendered at all.
+This is entirely an artificat of this library, since from the XML side
+there is no special syntax that distinguishes these properties.
+
+_macro_
+*`draw`* _`canvas (:SHAPE { required properties }) {other properties}` => svg-element object_
+ Adds a new shape to a canvas.  The shape keywords match the SVG
+ element names exactly:
+
+ || *Shape* || *Required attributes* ||
+ || `:line`    ||  `:x1 :y1 :x2 :y2`  ||
+ || `:rect`    ||  `:x :y :height :width` ||
+ || `:polyline` || `:points`   ||
+ || `:polygon`  || `:points`   ||
+ || `:ellipse`  || `:cx :cy :rx :ry` ||
+ || `:circle`   || `:cx :cy :r`  ||
+ || `:path`     || `:d`    ||
+ || `:use`      || `:xlink-href`  ||
+ || `:image`    || `:x :y :height :width :xlink-href` ||
+
 
