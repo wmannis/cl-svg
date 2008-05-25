@@ -277,10 +277,18 @@ _macro_
  element.  For example:
 
 {{{
-(text scene (:x 290 :y 320)
-  "Mouse over a "
-  (tspan (:fill "orange" :font-weight "bold") "circle"))
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 40 :width 250)))
+  (draw scene (:rect :x 0 :y 0 :height 40 :width 250) :fill "#CCCCCC")
+  (text scene (:x 25 :y 25)
+    "Mouse over a "
+    (tspan (:fill "orange" :font-weight "bold") "circle"))
+  (draw scene (:circle :cx 200 :cy 20 :r 10) :fill "blue")
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
 }}}
+
+ Produces:
+ http://cl-svg.googlecode.com/svn/wiki/text-ex.png
 
 == Element Modifiers ==
 
