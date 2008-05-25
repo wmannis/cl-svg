@@ -142,7 +142,7 @@ _macro_
 
  This will signal a *`missing-attribute`* condition of any of the
  required attributes are missing, unless used within the body of 
- the *`without-attribute-check`*.
+ the *`without-attribute-check`* macro.
 
 _macro_
 *`without-attribute-check`* _body_
