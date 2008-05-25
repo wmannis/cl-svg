@@ -76,7 +76,7 @@ _special variable_
 
 
 
-== SVG Toplevel ==
+== SVG Toplevel and Utilities ==
 
 The *`svg-toplevel`* class (never accessed directly) handles XML
 boilerplate as well as providing the outermost XML container for all
@@ -106,6 +106,10 @@ _generic function_
  Adds an XML stylesheet URL to the SVG file.  CSS may also be added
  inline with the function *`style`*.
 
+_generic function_
+*`xlink-href`* _svg-element => url-string_
+ Extracts the `id` property from any element and generates an XML URL
+ link to it, e.g., `url(#radialGradientOne)`.
 
 
 == Drawing Shape Elements ==
@@ -132,15 +136,109 @@ _macro_
 || `:image`    || `:x :y :height :width :xlink-href` ||
 
  This will signal a *`missing-attribute`* condition of any of the
- required attributes are missing, unless used within the body of the
- *`without-attribute-check`*.
+ required attributes are missing, unless used within the body of 
+ the *`without-attribute-check`*.
 
 _macro_
 *`without-attribute-check`* _body_
  Suppresses required attribute checking for all drawing commands in
  the body.
 
+
 == Definition Elements ==
+
+Elements which are not displayed directly but which are instead
+referenced by other elements should be stored in an SVG `<defs>`
+element.  This isn't actually a requirement of the standard, but a
+polite suggestion.  This library, however, will shepherd a bunch of
+group elements directly into a `<defs>` element.
+
+These defined elements are referred to by the elements that need them
+by means of the `:xlink-href` property.  Within this library the
+`:xlink-href` property will frequently be followed by a call to the
+generic function `xlink-href`.  See the examples below.
+
+All of the functions and macros that create grouping elements that
+contain shape elements (i.e., not color gradients or text elements)
+make a convenience macro available:
+
+_macro_
+*`draw*`* _(:SHAPE { required properties }) {other properties}` => svg-element object_
+ This is just like `draw` except that you don't specify the canvas.
+ The shape element will be placed in the group.
+
+There are four grouping elements that this library puts into the
+`<defs>` element.  Each must define an `:id` property.
+
+_macro_
+*`make-svg-symbol`* _scene (&rest attributes) &body shapes => svg-element_
+ Creates an SVG _symbol_, a collection of group and shapes that can be
+ instantiated by `<use>` in the main SVG body.
+
+{{{
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
+       ;;; draw a nice picture
+       (columns (make-svg-symbol scene (:id :generate :view-box "0 0 20 20")
+                  (draw* (:rect :x 5 :y 5 :height 10 :width 3) :opacity 1.0)
+                  (draw* (:rect :x 10 :y 5 :height 10 :width 3) :opacity 0.7)
+                  (draw* (:rect :x 15 :y 5 :height 10 :width 3) :opacity 0.3))))
+  ;;; Next, instantiate like mad.
+  (dotimes (i 400)
+    (let ((size (+ 5 (random 95))))
+      (draw scene (:use :xlink-href (xlink-href columns))
+            :x (- (random 750) 25)
+            :y (- (random 700) 25)
+            :height size :width size
+            :stroke "rgb(232, 229, 148)"
+            :stroke-width 0.3
+            :fill "purple")))
+  (title scene "SVG test: using symbols")
+  ...
+}}}
+
+_macro_
+*`make-marker`* _scene (&rest attributes) &body shapes => svg-element_
+ Creates line markers.
+
+_macro_
+*`make-pattern`* _scene (&rest attributes) &body shapes => svg-element_
+ Creates fill patterns.
+
+_macro_
+*`make-mask`* _scene (&rest attributes) &body shapes => svg-element_
+ Creates alpha masks.
+
+== Fill Gradients ==
+
+Fill gradient elements are also inserted into the `<defs`> element,
+but do not provide a `draw*` macro, which makes no sense.  The body of
+either gradient should contain calls to `stop` which defines color
+stop. 
+
+_macro_
+*`make-linear-gradient`* _scene (&rest attributes) &body color-stops_ => svg-element
+ Creates linear gradient elements.  It must define the attributes
+ `:id`, `:x1`, `:y2`, `:x2`, and `:y2`.
+
+_macro_
+*`make-radial-gradient`* _scene (&rest attributes) &body color-stops_ => svg-element
+ Creates radial gradient elements.  It must define the attributes
+ `:id`, `:cx`, `:cy` and `:r`.
+
+Here's an example of a linear gradient being used:
+
+{{{
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700))
+       (lg1 (make-linear-gradient scene (:id :generate
+                                         :x1 "0%" :y1 "0%" :x2 "100%" :y2 "100%")
+            (stop :color "black" :offset "0%")
+            (stop :color "purple" :offset "50%")
+            (stop :color "red" :offset "100%"))))
+  (title scene "SVG test: gradients")
+  (draw scene (:rect :x 10 :y 10 :height 200 :width 200)
+        :fill (xlink-href lg1))
+}}}
+
 
 
 == Other Grouping Elements ==
