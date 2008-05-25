@@ -111,6 +111,11 @@ _generic function_
  Extracts the `id` property from any element and generates an XML URL
  link to it, e.g., `url(#radialGradientOne)`.
 
+_generic function_
+*`stream-out`* _stream svg-element_
+ This sends the XML representation of the SVG element to the output
+ stream.
+
 
 == Drawing Shape Elements ==
 
@@ -163,7 +168,7 @@ contain shape elements (i.e., not color gradients or text elements)
 make a convenience macro available:
 
 _macro_
-*`draw*`* _(:SHAPE { required properties }) {other properties}` => svg-element object_
+*`draw*`* _(:SHAPE { required properties }) {other properties} => svg-element object_
  This is just like `draw` except that you don't specify the canvas.
  The shape element will be placed in the group.
 
@@ -225,6 +230,11 @@ _macro_
  Creates radial gradient elements.  It must define the attributes
  `:id`, `:cx`, `:cy` and `:r`.
 
+_macro_
+*`stop`* _&key color offset (opacity 1.0)_
+ Creates color stops for radial gradients.  It is only defined within
+ the macros that creat gradients.
+
 Here's an example of a linear gradient being used:
 
 {{{
@@ -243,6 +253,34 @@ Here's an example of a linear gradient being used:
 
 == Other Grouping Elements ==
 
+These grouping elements are inserted into the SVG in the order they
+are defined.  
+
+_macro_
+*`make-group`* _scene (&rest attributes) &body shapes_ => svg-element
+ Creates an SVG `<g>` group.  This is especially useful for collecting
+ shapes so that they can be manipulated as a group.
+
+_macro_
+*`link`* _scene (&rest attributes) &body shapes_ => svg-element
+ Makes the elements defined within it clickable links.  The attribute
+ `:xlink-href` must be defined with the URL to go to on click.
+
+_macro_
+*`text`* _scene (&rest attributes) &body elements_ => svg-element
+ Inserts text into the SVG document.  The `elements` must be either
+ text strings or calls to `tspan`.
+
+_macro_
+*`tspan`* _scene (&rest attributes) text_ => svg-element
+ Is used to add styling changes to a subset of the text in a `text`
+ element.  For example:
+
+{{{
+(text scene (:x 290 :y 320)
+  "Mouse over a "
+  (tspan (:fill "orange" :font-weight "bold") "circle"))
+}}}
 
 == Element Modifiers ==
 
