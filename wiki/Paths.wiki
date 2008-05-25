@@ -62,7 +62,7 @@ _function_
  of the second control point of a previous `quadratic-curve-to` command.
 
 _function_
-{ *`arc-to` | `arc-to-r` } _rx ry x-rotation large-arc-flag sweep-flag x y => path-string_
+{ *`arc-to` | `arc-to-r`* } _rx ry x-rotation large-arc-flag sweep-flag x y => path-string_
  Draws an eliptical arc from the current point to `x, y`.  The size is
  determined by the two radii, `rx` and `ry`.  `x-axis-rotation`
  indicates the rotation of the arc relative to the current coordinate
