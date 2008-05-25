@@ -144,6 +144,8 @@ _macro_
  required attributes are missing, unless used within the body of 
  the *`without-attribute-check`* macro.
 
+ See [Paths] for utilities to describe path data readably.
+
 _macro_
 *`without-attribute-check`* _body_
  Suppresses required attribute checking for all drawing commands in
