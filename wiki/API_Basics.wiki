@@ -120,15 +120,106 @@ _macro_
  Adds a new shape to a canvas.  The shape keywords match the SVG
  element names exactly:
 
- || *Shape* || *Required attributes* ||
- || `:line`    ||  `:x1 :y1 :x2 :y2`  ||
- || `:rect`    ||  `:x :y :height :width` ||
- || `:polyline` || `:points`   ||
- || `:polygon`  || `:points`   ||
- || `:ellipse`  || `:cx :cy :rx :ry` ||
- || `:circle`   || `:cx :cy :r`  ||
- || `:path`     || `:d`    ||
- || `:use`      || `:xlink-href`  ||
- || `:image`    || `:x :y :height :width :xlink-href` ||
+|| *Shape* || *Required attributes* ||
+|| `:line`    ||  `:x1 :y1 :x2 :y2`  ||
+|| `:rect`    ||  `:x :y :height :width` ||
+|| `:polyline` || `:points`   ||
+|| `:polygon`  || `:points`   ||
+|| `:ellipse`  || `:cx :cy :rx :ry` ||
+|| `:circle`   || `:cx :cy :r`  ||
+|| `:path`     || `:d`    ||
+|| `:use`      || `:xlink-href`  ||
+|| `:image`    || `:x :y :height :width :xlink-href` ||
+
+ This will signal a *`missing-attribute`* condition of any of the
+ required attributes are missing, unless used within the body of the
+ *`without-attribute-check`*.
+
+_macro_
+*`without-attribute-check`* _body_
+ Suppresses required attribute checking for all drawing commands in
+ the body.
+
+== Definition Elements ==
 
 
+== Other Grouping Elements ==
+
+
+== Element Modifiers ==
+
+Any shape or group element, including the SVG toplevel, may be
+modified by the following:
+
+_function_
+*`title`* _scene text_
+ Adds a title to the element.  The title of the SVG toplevel will
+ usually be displayed in your browser's title bar.
+
+_function_
+*`desc`* _scene text_
+ Adds an SVG `desc` ("description") element to the element.
+
+_function_
+*`comment`* _scene text_
+ Adds an XML comment to the element.
+
+_function_
+*`script`* _scene script_
+ Adds inline Javascript, correctly wrapped in `CDATA`.
+
+_function_
+*`style`* _scene css_
+ Adds inline CSS to an element.
+
+Geometric transformations in SVG are cumulative: you can cram as many
+of them into the `transform` attribute as you like and they'll be
+combined sensibly.
+
+_macro_
+*`transform`* _(transformations) element => svg-element_
+ Adds transformations to the `transform` property.  A single
+ transformation has a shorter notation available:
+
+{{{
+(transform (scale 33)
+  (draw scene (:rect ...)))
+}}}
+
+ or:
+
+{{{
+(transform ((scale 33))
+  (draw scene (:rect ...)))
+}}}
+
+ The transformation functions are:
+
+_function_
+*`scale`* _sx &optional sy_
+ Scales the image.  If no `sy` is given it takes the value of `sx`.
+
+_function_
+*`translate`* _tx &optional ty_
+ Translation.  If no `ty` is given it takes the value of `tx`.
+
+_function_
+*`rotate`* _angle &optional (cx 0) (cy 0)_
+ Rotates the image `angle` degrees about the point `cx, cy`.  By
+ default the rotation is about the origin of the current coordinate
+ system, rarely what you want by default.  You have to calculate the
+ center of the shape yourself.
+
+_function_
+*`skew-x`* _angle_
+ Skew in the X axis `angle` degrees.
+
+_function_
+*`skew-y`* _angle_
+ Skew in the Y axis `angle` degrees.
+
+_function_
+*`matrix`* _a b c d e f_
+ Roll your own transformation matrix. See
+ [http://www.w3.org/TR/SVG/coords.html#TransformMatrixDefined 7.4]
+ "Transform Matrix Defined."
