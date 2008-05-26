@@ -195,6 +195,16 @@ contents the new transform is simply appended."))
     (loop for element across (element-contents e)
           do (stream-out s element))))
 
+(defmacro with-svg-to-file ((svg &rest svg-attributes)
+                            (filename &rest open-options)
+                            &body body)
+  (let ((stream (gensym "stream")))
+    `(let ((,svg (make-svg-toplevel ,@svg-attributes)))
+       ,@body
+       (with-open-file (,stream ,filename :direction :output ,@open-options)
+         (stream-out ,stream ,svg)))))
+
+
 ;;; Conditionally check for shape attributes and create a shape element.
 ;;; See the comment for *CHECK-REQUIRED-ATTRIBUTES* above.
 (defgeneric assert-required-attributes (element attribute-list))
