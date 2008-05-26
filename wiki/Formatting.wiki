@@ -23,7 +23,7 @@ _special variable_
   Controls how many spaces to indend at each level of XML nesting.  It
   defaults to 2.  Set it to zero for no indentation.
 
-Finally, the [Path pathing] utilities insert newlines more often than
+Finally, the [Paths pathing] utilities insert newlines more often than
 is probably necessary, but again I wanted to balance readability with
 a suggestion in the SVG spec that lines shouldn't be longer than 255
 characters.  The API offers no control of this currently.
