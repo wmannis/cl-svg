@@ -11,7 +11,7 @@ and grouping elements are provided.
 The library aims to produce readable XML.  This inflates the size of
 the resulting somewhat, especially if it contains deeply nested
 elements.  The formatting depends on your Lisp correctly implementing
-the *`~<`* directive.
+the *`~<`* directive.  See also [Formatting].
 
 For more info on SVG see the [http://www.w3.org/TR/SVG11/ 1.1]
 Specification.  W3 Schools also has a good
@@ -50,6 +50,7 @@ The package name is *`:cl-svg`* with a single nickname, *`:svg`*.
 
 It depends on no other libraries.
 
+
 == Conditions and Restarts ==
 
 _condition_
@@ -59,21 +60,6 @@ _condition_
   the check with the macro *`WITHOUT-ATTRIBUTE-CHECK`*
 
 There are no restarts.
-
-== Global Variables ==
-
-_special variable_
-*`*float-format-precision*`*
-  Controls how many digits after the decimal place to print in SVG
-  element attributes.  It defaults to 2.  Highly precise floating
-  point numbers for coordinates, etc., serve little purpose but to
-  inflate the size of the SVG file.
-
-_special variable_
-*`*indent-spacing*`*
-  Controls how many spaces to indend at each level of XML nesting.  It
-  defaults to 2.  Set it to zero for no indentation.
-
 
 
 == SVG Toplevel and Utilities ==
@@ -99,6 +85,19 @@ _function_
 (let ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 300 :width 300)))
   (draw scene (:rect :x 5 :y 5 :height 30 :width 30))
 ...
+}}}
+
+_macro_
+*`with-svg-to-file`* _(svg &rest svg-attributes) (filename &rest open-options) &body body_
+ This simply wraps up SVG scene and file creation conveniently.  The
+ `open-options` are passed to `WITH-OPEN-FILE`, though note that the
+ macro provides `:direction :output` already.
+
+{{{
+(with-svg-to-file
+    (scene 'svg-1.1-toplevel :height 20 :width 20)
+    (#p"pale-blue-dot.svg" :if-exists :supersede)
+  (draw scene (:circle :cx 10 :cy 10 :r 5) :fill "cyan"))
 }}}
 
 _generic function_
