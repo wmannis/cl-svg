@@ -139,7 +139,7 @@ _macro_
 || `:use`      || `:xlink-href`  ||
 || `:image`    || `:x :y :height :width :xlink-href` ||
 
- This will signal a *`missing-attribute`* condition of any of the
+ This will signal a *`missing-attribute`* condition if any of the
  required attributes are missing, unless used within the body of 
  the *`without-attribute-check`* macro.
 
@@ -171,14 +171,15 @@ make a convenience macro available:
 _macro_
 *`draw*`* _(:SHAPE { required properties }) {other properties} => svg-element object_
  This is just like `draw` except that you don't specify the canvas.
- The shape element will be placed in the group.
+ The shape element will be placed in the group.  An error is signalled
+ if you try to call this outside a group definition macro.
 
 There are four grouping elements that this library puts into the
 `<defs>` element.  Each must define an `:id` property.
 
 _macro_
 *`make-svg-symbol`* _scene (&rest attributes) &body shapes => svg-element_
- Creates an SVG _symbol_, a collection of group and shapes that can be
+ Creates an SVG _symbol_, a collection of shapes and groups that can be
  instantiated by `<use>` in the main SVG body.
 
 {{{
@@ -217,9 +218,9 @@ _macro_
 == Fill Gradients ==
 
 Fill gradient elements are also inserted into the `<defs`> element,
-but do not provide a `draw*` macro, which makes no sense.  The body of
-either gradient should contain calls to `stop` which defines color
-stop. 
+but do not provide the `draw*` macro, which makes no sense here.  The
+body of both gradient definitions should contain calls to `stop` which
+defines color stops.
 
 _macro_
 *`make-linear-gradient`* _scene (&rest attributes) &body color-stops_ => svg-element
@@ -331,10 +332,12 @@ _macro_
   (draw scene (:rect ...)))
 }}}
 
- or:
+ But:
 
 {{{
 (transform ((scale 33))
+  (draw scene (:rect ...)))
+(transform ((rotate 90 15 15) (scale 1.36) (skew-x 30))
   (draw scene (:rect ...)))
 }}}
 
