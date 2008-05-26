@@ -65,9 +65,17 @@ References:
 08may15
   * small tweaks, added LINK for clickable, linked items
   * need to work more on the PATH interface - it could be smarter
-    about line breaks
+    about line breaks (fixed 08may26)
 
 08may17
   * transformations added over the last few days; some cleanup and a
     few more docstrings, but actual documentation is in order now
   * the GUI stuff may belong in an entirely different library
+
+08may26
+  * documentation, documentation
+  * a few refinements and convenience macros
+  * probably ready for a first packaging - the lively GUI sorts of
+    things will be in a different library sitting on top of this one
+  * probably should add a bunch of examples to the documentation
+  * otherwise, somewhere around 95% ready for a first release
