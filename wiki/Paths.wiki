@@ -69,6 +69,12 @@ _function_
  system.  Both `large-arc-flag` and `sweep-flag` may have the values
  '0' or '1'.
 
+_function_
+*`close-path`* _=> path-string_
+ Closes the current subpath by drawing a line from the current point
+ to the starting point of the subpath (_i.e._, the closes previous
+ `move-to`).
+
 An example:
 
 {{{
