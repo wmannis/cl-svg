@@ -77,8 +77,9 @@ needs to be expressed.")
 (define-path-instruction-pair arc-to "A"
   (rx ry x-rotation large-arc-flag sweep-flag x y))
 
+;;; This needs none of the faffing about of the other path elements.
 (defun close-path ()
-  (format-instruction "z" ()))
+  (format nil "z"))
 
 
 (defun make-path ()
