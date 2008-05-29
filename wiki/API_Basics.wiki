@@ -120,7 +120,7 @@ _generic function_
 
 The syntax of the shape drawing macro is meant to highlight those
 properties which must be defined for the shape to be rendered at all.
-This is entirely an artificat of this library, since from the XML side
+This is entirely an artifact of this library, since from the XML side
 there is no special syntax that distinguishes these properties.
 
 _macro_
