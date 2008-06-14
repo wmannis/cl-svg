@@ -101,6 +101,11 @@ _macro_
 }}}
 
 _generic function_
+*`add-element`*  _`svg-element string`_
+ If you need for some reason to add hand-rolled XML strings to any
+ SVG element, toplevel or otherwise, use this generic function.
+
+_generic function_
 *`add-stylesheet`*  _`svg-toplevel stylesheet-url`_
  Adds an XML stylesheet URL to the SVG file.  CSS may also be added
  inline with the function *`style`*.
