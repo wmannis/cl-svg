@@ -29,9 +29,9 @@
 
 (defsystem :cl-svg
   :name "CL-SVG"
-  :author "William S. Annis <wm.annis@gmail.com"
+  :author "William S. Annis <wm.annis@gmail.com>"
   :version "0.01"
-  :maintainer "William S. Annis <wm.annis@gmail.com"
+  :maintainer "William S. Annis <wm.annis@gmail.com>"
   :licence "MIT License"
   :description "Produce Scalable Vector Graphics (SVG) files"
 
