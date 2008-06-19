@@ -81,7 +81,6 @@ printed after the decimal point."))
            (:text-length "textLength")
            (:start-offset "startOffset")
            (:glyph-ref "glyphRef")
-           (:text-length "textLength")
            (:length-adjust "lengthAdjust"))))
     (if translation
         translation
