@@ -183,6 +183,14 @@ contents the new transform is simply appended."))
   (with-slots (stylesheets) svg
     (setf stylesheets (append stylesheets (cons url ())))))
 
+(defgeneric add-namespace (svg-toplevel name url))
+
+;;; Uses NCONC to place new namespaces at the end of the attributes list,
+;;; a stylistic nicety only.
+(defmethod add-namespace ((svg svg-toplevel) name url)
+  (with-slots (attributes) svg
+    (nconc attributes (list (concatenate 'string "xmlns:" name) url))))
+
 ;;; This aims for more civilized and readable output.
 (defmethod stream-out (s (e svg-toplevel))
   (format s "~A~&" (slot-value e 'xml-header))

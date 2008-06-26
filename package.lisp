@@ -38,6 +38,7 @@
            #:make-svg-toplevel
            #:with-svg-to-file
            #:add-stylesheet
+           #:add-namespace
            #:add-element
            #:add-class
            #:draw
