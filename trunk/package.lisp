@@ -47,6 +47,7 @@
            #:title
            #:comment
            #:script
+           #:script-link
            #:style
            #:text
            #:tspan
