@@ -1,0 +1,8 @@
+0.02 -  ???
+  * fixed duplicate :text-length in XMLIFY-KEYWORD (format-xml.lisp)
+  * added ADD-NAMESPACE method (svg.lisp)
+  * TODO : <foreignObjects>
+  * TODO : <svg> elements   ?????
+
+0.01 - June 14 2008
+  * initial release
