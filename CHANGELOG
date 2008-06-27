@@ -1,6 +1,7 @@
 0.02 -  ???
   * fixed duplicate :text-length in XMLIFY-KEYWORD (format-xml.lisp)
   * added ADD-NAMESPACE method (svg.lisp)
+  * added SCRIPT-LINK function (svg.lisp)
   * TODO : <foreignObjects>
   * TODO : <svg> elements   ?????
 

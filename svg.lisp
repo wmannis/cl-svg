@@ -286,6 +286,12 @@ contents the new transform is simply appended."))
     (add-element script-element "]]>")
     (add-element scene script-element)))
 
+(defun script-link (scene link)
+  (let ((script-link
+         (make-instance 'svg-element :name "script"
+            :attributes (list :type "text/ecmascript" :xlink-href link))))
+    (add-element scene script-link)))
+
 (defun style (scene css)
   "add inline CSS to a scene"
   (let ((style-element
