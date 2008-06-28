@@ -385,14 +385,16 @@ namespace) makes that possible. </p>")
     (add-element fo "</body>"))
   ;;; More fun.
 
-  (transform (rotate 15 215 375)
+  (transform ((rotate 30 215 375) (translate 100))
     (draw scene (:rect :x 30 :y 300 :width 400 :height 150)
           :fill "rgb(230,230,230)" :stroke "black"))
-  (let ((fo2 (transform (rotate 15 215 375)
+  (let ((fo2 (transform ((rotate 30 215 375) (translate 100))
                (make-foreign-object scene (:x 31 :y 320 :width 398 :height 148)))))
     (add-element fo2 "<body xmlns=\"http://www.w3.org/1999/xhtml\" align=\"justify\">")
     (add-element fo2 "<p>The usual SVG transformations can be inflicted
 on <tt>foreignObject</tt>s, too.</p>")
     (add-element fo2 "<p>This is <em>niftier</em>!</p>")
     (add-element fo2 "</body>")))
+
   
+;;; testing.lisp ends here
