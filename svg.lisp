@@ -118,6 +118,7 @@ contents the new transform is simply appended."))
       (push-attribute element :transform
         (concatenate 'string (get-attribute element :transform) " " transform))
       (push-attribute element :transform transform))
+  ;; return the element so that (TRANSFORM ...) can be used neatly in LETs
   element)
 
 (defgeneric add-class (element class)
@@ -447,7 +448,7 @@ contents the new transform is simply appended."))
       (let ((trans (gensym))
             (e (gensym)))
         `(let ((,e ,@element))
-           (dolist (,trans (list ,@transformations))
+           (dolist (,trans (list ,@transformations) ,e)
              (add-transform ,e ,trans))))))
 
 
