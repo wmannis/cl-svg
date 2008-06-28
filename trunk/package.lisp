@@ -61,6 +61,7 @@
            #:make-radial-gradient
            #:make-group
            #:link
+           #:make-foreign-object
            ;; transformations
            #:transform
            #:scale

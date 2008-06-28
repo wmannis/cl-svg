@@ -370,3 +370,29 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
           (funcall tendril style-group :distance 2)))))
   (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
     (stream-out s scene)))
+
+;;; Foreign objects
+(with-svg-to-file (scene 'svg-1.1-toplevel :width 700 :height 700)
+    (#p"test.svg" :if-exists :supersede)
+  (draw scene (:rect :x 30 :y 30 :width 400 :height 150)
+        :fill "rgb(230,230,230)" :stroke "black")
+  (let ((fo (make-foreign-object scene (:x 31 :y 50 :width 398 :height 148))))
+    (add-element fo "<body xmlns=\"http://www.w3.org/1999/xhtml\" align=\"justify\">")
+    (add-element fo "<p>Here is a small bit of text which requires word
+wrap.  The use of a <tt>foreignObject</tt> (with the appropriate XHTML
+namespace) makes that possible. </p>")
+    (add-element fo "<p>Nifty, eh?</p>")
+    (add-element fo "</body>"))
+  ;;; More fun.
+
+  (transform (rotate 15 215 375)
+    (draw scene (:rect :x 30 :y 300 :width 400 :height 150)
+          :fill "rgb(230,230,230)" :stroke "black"))
+  (let ((fo2 (transform (rotate 15 215 375)
+               (make-foreign-object scene (:x 31 :y 320 :width 398 :height 148)))))
+    (add-element fo2 "<body xmlns=\"http://www.w3.org/1999/xhtml\" align=\"justify\">")
+    (add-element fo2 "<p>The usual SVG transformations can be inflicted
+on <tt>foreignObject</tt>s, too.</p>")
+    (add-element fo2 "<p>This is <em>niftier</em>!</p>")
+    (add-element fo2 "</body>")))
+  
