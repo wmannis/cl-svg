@@ -94,6 +94,14 @@
 (defmethod get-attribute ((element svg-element) attribute)
   (getf (element-attributes element) attribute))
 
+(defgeneric add-namespace (element name url))
+
+;;; Uses NCONC to place new namespaces at the end of the attributes list,
+;;; a stylistic nicety only.
+(defmethod add-namespace ((e svg-element) name url)
+  (with-slots (attributes) e
+    (nconc attributes (list (concatenate 'string "xmlns:" name) url))))
+
 (defgeneric has-contents-p (element))
 
 (defmethod has-contents-p ((element svg-element))
@@ -109,7 +117,8 @@ contents the new transform is simply appended."))
   (if (has-attribute-p element :transform)
       (push-attribute element :transform
         (concatenate 'string (get-attribute element :transform) " " transform))
-      (push-attribute element :transform transform)))
+      (push-attribute element :transform transform))
+  element)
 
 (defgeneric add-class (element class)
   (:documentation
@@ -182,14 +191,6 @@ contents the new transform is simply appended."))
 (defmethod add-stylesheet ((svg svg-toplevel) url)
   (with-slots (stylesheets) svg
     (setf stylesheets (append stylesheets (cons url ())))))
-
-(defgeneric add-namespace (svg-toplevel name url))
-
-;;; Uses NCONC to place new namespaces at the end of the attributes list,
-;;; a stylistic nicety only.
-(defmethod add-namespace ((svg svg-toplevel) name url)
-  (with-slots (attributes) svg
-    (nconc attributes (list (concatenate 'string "xmlns:" name) url))))
 
 ;;; This aims for more civilized and readable output.
 (defmethod stream-out (s (e svg-toplevel))
@@ -299,7 +300,6 @@ contents the new transform is simply appended."))
     (add-element style-element css)
     (add-element scene style-element)))
 
-
 ;;; Grouping elements.  Many of the grouping elements have similar
 ;;; defining semantics: create the group, stuff in components, add
 ;;; to the main canvas.  The created groups can be bound to variables
@@ -353,6 +353,10 @@ contents the new transform is simply appended."))
 ;;; clicky-clicky
 (define-element-maker :link "a" '(:xlink-href))
 (define-toplevel-group-maker link :link)
+
+;;; Useful, if not entirely portable.
+(define-element-maker :foreign-object "foreignObject" '(:x :y :height :width))
+(define-toplevel-group-maker make-foreign-object :foreign-object)
 
 
 ;;; For text elements - TSPAN just spits out a string rather than insert
