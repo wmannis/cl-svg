@@ -115,11 +115,15 @@ _generic function_
  Adds an XML namespace to the SVG file.  The prefix will have "xmlns:"
  attached to it automatically:
 
-{{{(add-namespace "clsvggui" "http://www.lingweenie.org/lisp/cl-svg-gui")}}}
+{{{
+(add-namespace "clsvggui" "http://www.lingweenie.org/lisp/cl-svg-gui")
+}}}
 
  will result in:
 
-{{{xmlns:clsvggui="http://www.lingweenie.org/lisp/cl-svg-gui"}}}
+{{{
+xmlns:clsvggui="http://www.lingweenie.org/lisp/cl-svg-gui"
+}}}
 
 _generic function_
 *`xlink-href`* _svg-element => url-string_
