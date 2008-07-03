@@ -111,6 +111,17 @@ _generic function_
  inline with the function *`style`*.
 
 _generic function_
+*`add-namespace`*  _`svg-toplevel prefix namespace-url`_
+ Adds an XML namespace to the SVG file.  The prefix will have "xmlns:"
+ attached to it automatically:
+
+{{{(add-namespace "clsvggui" "http://www.lingweenie.org/lisp/cl-svg-gui")}}}
+
+ will result in:
+
+{{{xmlns:clsvggui="http://www.lingweenie.org/lisp/cl-svg-gui"}}}
+
+_generic function_
 *`xlink-href`* _svg-element => url-string_
  Extracts the `id` property from any element and generates an XML URL
  link to it, e.g., `url(#radialGradientOne)`.
@@ -269,6 +280,12 @@ _macro_
  shapes so that they can be manipulated as a group.
 
 _macro_
+*`make-foreign-object`* _scene (&rest attributes)_ => svg-element
+ embeds non-SVG XML contents in the SVG file.  Be sure to consult the
+ [http://www.w3.org/TR/SVG/extend.html#EmbeddingForeignObjects SVG
+ spec] before doing this, to understand the namespace issues.
+
+_macro_
 *`link`* _scene (&rest attributes) &body shapes_ => svg-element
  Makes the elements defined within it clickable links.  The attribute
  `:xlink-href` must be defined with the URL to go to on click.
@@ -318,6 +335,10 @@ _function_
 _function_
 *`script`* _scene script_
  Adds inline Javascript, correctly wrapped in `CDATA`.
+
+_function_
+*`script-link`* _scene script-url_
+ Adds a link to an external script URL.
 
 _function_
 *`style`* _scene css_
