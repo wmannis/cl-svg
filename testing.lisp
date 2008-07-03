@@ -383,8 +383,8 @@ wrap.  The use of a <tt>foreignObject</tt> (with the appropriate XHTML
 namespace) makes that possible. </p>")
     (add-element fo "<p>Nifty, eh?</p>")
     (add-element fo "</body>"))
-  ;;; More fun.
 
+  ;;; Transform the foreigner!
   (transform ((rotate 30 215 375) (translate 100))
     (draw scene (:rect :x 30 :y 300 :width 400 :height 150)
           :fill "rgb(230,230,230)" :stroke "black"))
