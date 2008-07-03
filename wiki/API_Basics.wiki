@@ -282,8 +282,8 @@ _macro_
 _macro_
 *`make-foreign-object`* _scene (&rest attributes)_ => svg-element
  embeds non-SVG XML contents in the SVG file.  Be sure to consult the
- [http://www.w3.org/TR/SVG/extend.html#EmbeddingForeignObjects SVG
- spec] before doing this, to understand the namespace issues.
+ SVG [http://www.w3.org/TR/SVG/extend.html#EmbeddingForeignObjects spec]
+ before doing this, to understand the namespace issues.
 
 _macro_
 *`link`* _scene (&rest attributes) &body shapes_ => svg-element
