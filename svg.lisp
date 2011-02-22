@@ -175,6 +175,16 @@ contents the new transform is simply appended."))
                        "xmlns" "http://www.w3.org/2000/svg"
                        "xmlns:xlink" "http://www.w3.org/1999/xlink")))
 
+(defclass svg-1.2-toplevel (svg-toplevel)
+  ()
+  (:default-initargs
+     :name "svg"
+     :xml-header "<?xml version=\"1.0\" standalone=\"no\"?>"
+     :attributes (list :version "1.2" :id "toplevel"
+                       "xmlns" "http://www.w3.org/2000/svg"
+                       "xmlns:xlink" "http://www.w3.org/1999/xlink")))
+
+
 (defun make-svg-toplevel (class &rest attributes)
   (let ((svg (make-instance class)))
     ;; Merge with, don't clobber, <svg /> attributes.
@@ -198,7 +208,8 @@ contents the new transform is simply appended."))
   (format s "~A~&" (slot-value e 'xml-header))
   (dolist (css (slot-value e 'stylesheets))
     (format s "<?xml-stylesheet href=\"~A\" type=\"text/css\"?>~&" css))
-  (format s "~A~&" (slot-value e 'doctype))
+  (when (slot-boundp e 'doctype)
+    (format s "~A~&" (slot-value e 'doctype)))
   (with-xml-group-element (s (element-name e) (element-attributes e))
     (when (has-contents-p (svg-defs e))
       (stream-out s (svg-defs e)))
@@ -378,6 +389,16 @@ contents the new transform is simply appended."))
 (define-element-maker :text "text" '(:x :y))
 
 (defmacro text (scene (&rest opts) &body elements)
+  (let ((group (gensym "group")))
+    `(let ((,group (make-svg-element :text (list ,@opts))))
+       (add-element ,scene ,group)
+       (dolist (element (list ,@elements))
+         (add-element ,group element))
+       ,group)))
+
+(define-element-maker :textarea "textArea" '(:x :y :width :height))
+
+(defmacro textarea (scene (&rest opts) &body elements)
   (let ((group (gensym "group")))
     `(let ((,group (make-svg-element :text (list ,@opts))))
        (add-element ,scene ,group)

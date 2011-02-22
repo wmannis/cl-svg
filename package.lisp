@@ -34,7 +34,7 @@
            #:missing-attributes
            #:stream-out
            #:xlink-href
-           #:svg-toplevel #:svg-1.1-toplevel
+           #:svg-toplevel #:svg-1.1-toplevel #:svg-1.2-toplevel
            #:make-svg-toplevel
            #:with-svg-to-file
            #:add-stylesheet
@@ -49,7 +49,7 @@
            #:script
            #:script-link
            #:style
-           #:text
+           #:text #:textarea
            #:tspan
            #:make-svg-symbol
            #:make-marker

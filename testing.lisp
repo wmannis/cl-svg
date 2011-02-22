@@ -255,7 +255,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
           (root canvas x y angle (1- depth) alpha))))
 
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
-                                 :viewbox "0 0 700 700"))
+                                 :view-box "0 0 700 700"))
        (rg (make-radial-gradient scene (:id :generate
                                         :cx "50%" :cy "50%" :r "50%")
              (stop :color "rgb(32, 38, 0)" :offset "0%")
@@ -268,7 +268,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
 
 ;;; paths - an example from the SVG spec
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
-                                 :viewbox "0 0 700 700")))
+                                 :view-box "0 0 700 700")))
   (title scene "Path test")
   (draw scene (:path :d (path
                           (move-to 100 400)
@@ -288,7 +288,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
 
 ;;; Some random curves.
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
-                                 :viewbox "0 0 700 700"))
+                                 :view-box "0 0 700 700"))
        (rg (make-radial-gradient scene (:id :generate
                                         :cx "50%" :cy "50%" :r "50%")
              (stop :color "rgb(32, 38, 0)" :offset "0%")
@@ -349,7 +349,7 @@ great colors.  And the random rectangles!  You want this as wallpaper.")
           (incf angle c)))))
 
 (let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
-                                 :viewbox "0 0 700 700"))
+                                 :view-box "0 0 700 700"))
        (rg (make-radial-gradient scene (:id :generate
                                         :cx "50%" :cy "50%" :r "50%")
              (stop :color "rgb(32, 38, 0)" :offset "0%")
