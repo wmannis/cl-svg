@@ -1,4 +1,4 @@
-0.02 -  ???
+0.02 - June 15 2008
   * fixed duplicate :text-length in XMLIFY-KEYWORD (format-xml.lisp)
   * added ADD-NAMESPACE method, available to all elements (svg.lisp)
   * added SCRIPT-LINK function (svg.lisp)
