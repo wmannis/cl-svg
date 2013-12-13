@@ -20,7 +20,7 @@ _special variable_
 
 _special variable_
 *`*indent-spacing*`*
-  Controls how many spaces to indend at each level of XML nesting.  It
+  Controls how many spaces to indent at each level of XML nesting.  It
   defaults to 2.  Set it to zero for no indentation.
 
 This simple code:
