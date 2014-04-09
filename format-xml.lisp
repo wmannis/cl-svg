@@ -163,5 +163,23 @@ printed after the decimal point."))
         ;; a small number of points doesn't need the full-on emprettying
         (format nil "~:{ ~A,~A~}" points))))
 
+;;; ABCL hacks for getting around pretty printer/stream issues
+#+abcl
+(progn 
+  (defmethod pp-xml-attr (s (kw symbol) &optional colon-p at-p)
+    (declare (ignore colon-p at-p))
+    (format s "~A" (xmlify-keyword kw)))
+
+  (defmethod pp-xml-attr (s (kw string) &optional colon-p at-p)
+    (declare (ignore colon-p at-p))
+    (format s "~A" kw))
+
+  (defmethod pp-xml-value (s value &optional colon-p at-p)
+    (declare (ignore colon-p at-p))
+    (format s "~A" value))
+
+  (defmethod pp-xml-attr (s (value float) &optional colon-p at-p)
+    (declare (ignore colon-p at-p))
+    (format s "~v$" *float-format-precision* value)))
 
 ;;; format-xml.lisp ends here
