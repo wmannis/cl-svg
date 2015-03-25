@@ -1,0 +1,72 @@
+The XML required by SVG is fairly trivial.  As a result CL-SVG doesn't
+use one of the several more powerful XML libraries available for
+Common Lisp, but instead spits out XML directly itself.  The output is
+handled by `format-xml.lisp` and relies heavily on some of the more
+exotic options offered by `FORMAT`.
+
+CL-SVG tries hard to produce XML readable by you and your editor.  As
+a consequence there's a _lot_ of extra whitespace in the resulting SVG
+files.  There are two global special variables to get some control of
+this.
+
+_special variable_
+**`*float-format-precision*`**
+> Controls how many digits after the decimal place to print in SVG
+> element attributes.  It defaults to 2.  Highly precise floating
+> point numbers for coordinates, etc., serve little purpose but to
+> inflate the size of the SVG file.
+
+_special variable_
+**`*indent-spacing*`**
+> Controls how many spaces to indent at each level of XML nesting.  It
+> defaults to 2.  Set it to zero for no indentation.
+
+This simple code:
+
+```
+(with-svg-to-file
+    (scene 'svg-1.1-toplevel :height 20 :width 20)
+    (#p"pale-blue-dot.svg" :if-exists :supersede)
+  (draw scene (:circle :cx 10 :cy 10 :r 5) :fill "cyan"))
+```
+
+results in this XML:
+
+```
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="20" height="20" version="1.1" id="toplevel"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+  <circle cx="10" cy="10" r="5" fill="cyan"/>
+</svg>
+```
+
+You can adjust the right margin setting using the CL special
+variable `*PRINT-RIGHT-MARGIN*`, though certain bits of boilerplate
+have newlines hardcoded.
+
+```
+(let ((*print-right-margin* 200))
+       (with-svg-to-file
+           (scene 'svg-1.1-toplevel :height 20 :width 20)
+           (#p"pale-blue-dot.svg" :if-exists :supersede)
+         (draw scene (:circle :cx 10 :cy 10 :r 5) :fill "cyan")))
+```
+
+Results in:
+
+```
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="20" height="20" version="1.1" id="toplevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <circle cx="10" cy="10" r="5" fill="cyan"/>
+</svg>
+```
+
+Finally, the [pathing](Paths.md) utilities insert newlines more often than
+is probably necessary, but again I wanted to balance readability with
+a suggestion in the SVG spec that lines shouldn't be longer than 255
+characters.  The API currently offers no control over this.

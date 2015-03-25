@@ -1,0 +1,101 @@
+# Introduction #
+
+CL-SVG provides a simple API to produce SVG path
+[data](http://www.w3.org/TR/SVG/paths.html#PathData) more readably.
+
+_function_
+**`make-path`** _=> path-string_
+> Makes an adjustable string into which path commands are pushed.
+
+_macro_
+**`with-path`** _path &body path-commands_
+> Adds path data to the `path`.  You can only use the path data
+> commands below within the body.
+
+_macro_
+**`path`** _&body path-commands => path-data-string_
+> This is a convenience macro equivalent to calling `make-path`, adding
+> path data with `WITH-PATH` then returning the path data string.
+
+All the path data commands except `close-path` have two versions, one
+which uses absolute coordinates for points and one which uses
+coordinates relative to the last point produced.  The function names
+for the relative version end in `-r`.
+
+_function_
+{ **`move-to`** | **`move-to-r`** } _x y => path-string_
+> Move to the coordinates without drawing anything.
+
+_function_
+{ **`line-to`** | **`line-to-r`** } _x y => path-string_
+> Draw a line to the coordinates.
+
+_function_
+{ **`horizontal-to`** | **`horizontal-to-r`** } _x => path-string_
+> Draw a horizontal line to `x`.
+
+_function_
+{ **`vertical-to`** | **`vertical-to-r`** } _y => path-string_
+> Draw a vertical line to `y`.
+
+_function_
+{ **`curve-to`** | **`curve-to-r`** } _control-x1 control-y1 control-x2 control-y2 x y => path-string_
+> Draw a cubic Bézier curve to `x, y` using `control-x1, control-y1` as
+> the control point at the start of the curve and `control-x2,
+> control-y2` at the end.
+
+_function_
+{ **`smooth-curve-to`** | **`smooth-curve-to-r`** } _control-x2 control-y2 x y => path-string_
+> Same as `curve-to` but the first control point is the reflection
+> of the second control point of a previous `curve-to` command.
+
+_function_
+{ **`quadratic-curve-to`** | **`quadratic-curve-to-r`** } _control-x1 control-y1 x y => path-string_
+> Draw a quadratic Bézier curve to `x, y` using `control-x1, control-y1` as
+> the control point.
+
+_function_
+{ **`smooth-quadratic-curve-to`** | **`smooth-quadratic-curve-to-r`** } _x y => path-string_
+> Same as `quadratic-curve-to` but the control control point is the reflection
+> of the second control point of a previous `quadratic-curve-to` command.
+
+_function_
+{ **`arc-to` | `arc-to-r`** } _rx ry x-rotation large-arc-flag sweep-flag x y => path-string_
+> Draws an eliptical arc from the current point to `x, y`.  The size is
+> determined by the two radii, `rx` and `ry`.  `x-axis-rotation`
+> indicates the rotation of the arc relative to the current coordinate
+> system.  Both `large-arc-flag` and `sweep-flag` may have the values
+> '0' or '1'.
+
+_function_
+**`close-path`** _=> path-string_
+> Closes the current subpath by drawing a line from the current point
+> to the starting point of the subpath (_i.e._, the closes previous
+> `move-to`).
+
+An example:
+
+```
+(let* ((scene (make-svg-toplevel 'svg-1.1-toplevel :height 700 :width 700
+                                 :viewbox "0 0 700 700")))
+  (title scene "Path test")
+  (draw scene (:path :d (path
+                          (move-to 100 400)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 25 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 50 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 75 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (arc-to-r 25 100 -30 0 1 50 -25)
+                          (line-to-r 50 -25)
+                          (vertical-to-r 50)))
+               :fill "none" :stroke "blue" :stroke-width 5)
+  (with-open-file (s #p"test.svg" :direction :output :if-exists :supersede)
+    (stream-out s scene)))
+```
+
+Produces:
+
+![http://cl-svg.googlecode.com/svn/wiki/path-ex.png](http://cl-svg.googlecode.com/svn/wiki/path-ex.png)
