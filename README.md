@@ -9,6 +9,7 @@ off using an XML library.
 
 See `docs/API.md` for how to use this library.
 
-
+The file `testing.lisp` has a collection of not very well
+documented examples.
 
 ![Flying Noodles](https://github.com/wmannis/cl-svg/blob/master/docs/teenyroots.png)
