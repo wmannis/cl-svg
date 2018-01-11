@@ -583,4 +583,4 @@ An example:
 
 Produces:
 
-![Path example](https://github.com/wmannis/cl-svg/blob/master/docs/path-ex.lisp)
+![Path example](https://github.com/wmannis/cl-svg/blob/master/docs/path-ex.png)
