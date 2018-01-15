@@ -421,14 +421,14 @@ files.  There are two global special variables to get some control of
 this.
 
 *special variable*  
-*`**float-format-precision**`**  
+**`*float-format-precision*`**  
   Controls how many digits after the decimal place to print in SVG
   element attributes.  It defaults to 2.  Highly precise floating
   point numbers for coordinates, etc., serve little purpose but to
   inflate the size of the SVG file.
 
 *special variable*  
-**`**indent-spacing**`*  
+**`**indent-spacing*`**  
   Controls how many spaces to indent at each level of XML nesting.  It
   defaults to 2.  Set it to zero for no indentation.
 
