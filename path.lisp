@@ -30,7 +30,8 @@
 
 
 (defun format-instruction (instruction &rest args)
-  (format nil "~A~{~A~^ ~}" instruction args))
+  (let ((control (format nil "~~A~~{~~~A$~~^ ~~}" *float-format-precision*)))
+    (format nil control instruction args)))
 
 (defmacro define-path-instruction-pair (name instruction (&rest args))
   (let ((draw-relative (intern (concatenate 'string (string name) "-R"))))
