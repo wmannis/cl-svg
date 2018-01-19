@@ -36,8 +36,8 @@
   :description "Produce Scalable Vector Graphics (SVG) files"
 
   :components ((:file "package")
-               (:file "path")
                (:file "format-xml")
+               (:file "path")
                (:file "svg"))
   :serial t)
   
