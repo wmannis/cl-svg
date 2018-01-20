@@ -37,11 +37,17 @@
   "Constrains how many digits are printed after the decimal point in XML
 attribute values.")
 
+(defvar *precision-epsilon* 0.01)
+
+(defun set-float-precision (p)
+  (when (> p 6)
+    (warn "Some browsers' SVG will fail on floats with more than six places."))
+  (setf *float-format-precision* p
+        *precision-epsilon* (/ 1.0 (expt 10 p))))
 
 (defmacro with-indentation (&body body)
   `(let ((*indent-level* (+ *indent-level* *indent-spacing*)))
      ,@body))
-
 
 (defgeneric pp-xml-attr (stream keyword &optional colon-p at-p)
   (:documentation "This turns a keyword slot of a p-list into something XML
@@ -86,6 +92,10 @@ printed after the decimal point."))
         translation
         (string-downcase (symbol-name kw)))))
 
+(defmethod pp-xml-value ((s stream) value &optional colon-p at-p)
+  (declare (ignore colon-p at-p))
+  (format s "~A" value))
+
 (defmethod pp-xml-attr ((s stream) (kw symbol) &optional colon-p at-p)
   (declare (ignore colon-p at-p))
   (format s "~A" (xmlify-keyword kw)))
@@ -94,9 +104,22 @@ printed after the decimal point."))
   (declare (ignore colon-p at-p))
   (format s "~A" kw))
 
-(defmethod pp-xml-value ((s stream) value &optional colon-p at-p)
+;;; CLHS 12.1.3.2 - if a ratio can be simplified to an integer, it
+;;; will be. This includes the tricky 0/n, which is just 0, so I don't
+;;; have to watch for that here.
+(defmethod pp-xml-value ((s stream) (value ratio) &optional colon-p at-p)
   (declare (ignore colon-p at-p))
-  (format s "~A" value))
+  (format s "~v$" *float-format-precision* value))
+
+;;; Several browser SVG implementations refuse "0.0" as a legal
+;;; representation of zero, some accept it.  The standard apparently
+;;; admits several interpretations.  This code filters out fpns
+;;; arbitrarily close to zero, and just dumps in a single integer 0.
+(defmethod pp-xml-value ((s stream) (value float) &optional colon-p at-p)
+  (declare (ignore colon-p at-p))
+  (if (< (- (abs value) *precision-epsilon*) 0.00000001)
+      (format s "0")
+      (format s "~v$" *float-format-precision* value)))
 
 (defmethod pp-xml-value ((s stream) (value float) &optional colon-p at-p)
   (declare (ignore colon-p at-p))
