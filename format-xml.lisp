@@ -121,11 +121,6 @@ printed after the decimal point."))
       (format s "0")
       (format s "~v$" *float-format-precision* value)))
 
-(defmethod pp-xml-value ((s stream) (value float) &optional colon-p at-p)
-  (declare (ignore colon-p at-p))
-  (format s "~v$" *float-format-precision* value))
-
-
 (defun element->xml (stream element properties)
   ;; FORMAT ~/ functions not in CL-USER have to state their package.
   (format
