@@ -1,3 +1,10 @@
+0.03 - Jan 20 2018
+  * homogenzied handling of output numbers, so that paths and
+    transformations get proper precision control
+  * added fiddly bits to cope with different browsers' divergent
+    handling of floating point zero (some accept it, some do not)
+  * retrieved documentation from Google wiki format
+
 0.02 - June 15 2008
   * fixed duplicate :text-length in XMLIFY-KEYWORD (format-xml.lisp)
   * added ADD-NAMESPACE method, available to all elements (svg.lisp)
