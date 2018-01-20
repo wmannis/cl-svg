@@ -443,25 +443,25 @@ contents the new transform is simply appended."))
 ;;; http://www.w3.org/TR/SVG11/coords.html#TransformAttribute
 (defun scale (sx &optional sy)
   (if sy
-      (format nil "scale(~A, ~A)" sx sy)
-      (format nil "scale(~A)" sx)))
+      (format nil "scale(~/cl-svg:pp-xml-value/, ~/cl-svg:pp-xml-value/)" sx sy)
+      (format nil "scale(~/cl-svg:pp-xml-value/)" sx)))
 
 (defun translate (tx &optional ty)
   (if ty
-      (format nil "translate(~A, ~A)" tx ty)
-      (format nil "translate(~A)" tx)))
+      (format nil "translate(~/cl-svg:pp-xml-value/, ~/cl-svg:pp-xml-value/)" tx ty)
+      (format nil "translate(~/cl-svg:pp-xml-value/)" tx)))
 
 (defun rotate (angle &optional (cx 0) (cy 0))
-  (format nil "rotate(~A, ~A, ~A)" angle cx cy))
+  (format nil "rotate(~/cl-svg:pp-xml-value/, ~/cl-svg:pp-xml-value/, ~/cl-svg:pp-xml-value/)" angle cx cy))
 
 (defun skew-x (angle)
-  (format nil "skewX(~A)" angle))
+  (format nil "skewX(~/cl-svg:pp-xml-value/)" angle))
 
 (defun skew-y (angle)
-  (format nil "skewY(~A)" angle))
+  (format nil "skewY(~/cl-svg:pp-xml-value/)" angle))
 
 (defun matrix (a b c d e f)
-  (format nil "matrix(~A,~A,~A,~A,~A,~A)" a b c d e f))
+  (format nil "matrix(~@{~/cl-svg:pp-xml-value/~^,~})" a b c d e f))
 
 ;;; Will accept a single transformation simply or nested ones:
 ;;; (TRANSFORM (scale 3) (draw ...))     or
