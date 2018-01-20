@@ -28,10 +28,10 @@
 
 (in-package :cl-svg)
 
-
+;;; https://github.com/w3c/svgwg/issues/331 - many browsers do *not*
+;;; follow the standard, and don't accept 0.0 as a legit 0.
 (defun format-instruction (instruction &rest args)
-  (let ((control (format nil "~~A~~{~~~A$~~^ ~~}" *float-format-precision*)))
-    (format nil control instruction args)))
+  (format nil "~A~{~/cl-svg:pp-xml-value/~^ ~}" instruction args))
 
 (defmacro define-path-instruction-pair (name instruction (&rest args))
   (let ((draw-relative (intern (concatenate 'string (string name) "-R"))))
