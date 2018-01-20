@@ -30,6 +30,7 @@
   (:use :common-lisp)
   (:export #:*indent-spacing*
            #:*float-format-precision*
+           #:set-float-precision
            #:without-attribute-check
            #:missing-attributes
            #:stream-out
