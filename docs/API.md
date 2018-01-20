@@ -407,81 +407,6 @@ combined sensibly.
  [7.4](http://www.w3.org/TR/SVG/coords.html#TransformMatrixDefined)
  "Transform Matrix Defined."
 
-## How CL-SVG produces SVG's XML
-
-The XML required by SVG is fairly trivial.  As a result CL-SVG doesn't
-use one of the several more powerful XML libraries available for
-Common Lisp, but instead spits out XML directly itself.  The output is
-handled by `format-xml.lisp` and relies heavily on some of the more
-exotic options offered by `FORMAT`.
-
-CL-SVG tries hard to produce XML readable by you and your editor.  As
-a consequence there's a *lot* of extra whitespace in the resulting SVG
-files.  There are two global special variables to get some control of
-this.
-
-*special variable*  
-**`*float-format-precision*`**  
-  Controls how many digits after the decimal place to print in SVG
-  element attributes.  It defaults to 2.  Highly precise floating
-  point numbers for coordinates, etc., serve little purpose but to
-  inflate the size of the SVG file.
-
-*special variable*  
-**`**indent-spacing*`**  
-  Controls how many spaces to indent at each level of XML nesting.  It
-  defaults to 2.  Set it to zero for no indentation.
-
-This simple code:
-
-```lisp
-(with-svg-to-file
-    (scene 'svg-1.1-toplevel :height 20 :width 20)
-    (#p"pale-blue-dot.svg" :if-exists :supersede)
-  (draw scene (:circle :cx 10 :cy 10 :r 5) :fill "cyan"))
-```
-
-results in this XML:
-
-```xml
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
-  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="20" height="20" version="1.1" id="toplevel"
-    xmlns="http://www.w3.org/2000/svg"
-    xmlns:xlink="http://www.w3.org/1999/xlink">
-  <circle cx="10" cy="10" r="5" fill="cyan"/>
-</svg>
-```
-
-You can adjust the right margin setting using the CL special
-variable `**PRINT-RIGHT-MARGIN**`, though certain bits of boilerplate
-have newlines hardcoded.
-
-```lisp
-(let ((**print-right-margin** 200))
-       (with-svg-to-file
-           (scene 'svg-1.1-toplevel :height 20 :width 20)
-           (#p"pale-blue-dot.svg" :if-exists :supersede)
-         (draw scene (:circle :cx 10 :cy 10 :r 5) :fill "cyan")))
-```
-
-Results in:
-
-
-```xml
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
-  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg width="20" height="20" version="1.1" id="toplevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <circle cx="10" cy="10" r="5" fill="cyan"/>
-</svg>
-```
-
-Finally, the pathing utilities insert newlines more often than is
-probably necessary, but again I wanted to balance readability with a
-suggestion in the SVG spec that lines shouldn't be longer than 255
-characters.  The API currently offers no control over this.
 
 ## The Path API
 
@@ -584,3 +509,96 @@ An example:
 Produces:
 
 ![Path example](https://github.com/wmannis/cl-svg/blob/master/docs/path-ex.png)
+
+
+## How CL-SVG produces SVG's XML
+
+The XML required by SVG is fairly trivial.  As a result CL-SVG doesn't
+use one of the several more powerful XML libraries available for
+Common Lisp, but instead spits out XML directly itself.  The output is
+handled by `format-xml.lisp` and relies heavily on some of the more
+exotic options offered by `FORMAT`.
+
+CL-SVG tries hard to produce XML readable by you and your editor.  As
+a consequence there's a *lot* of extra whitespace in the resulting SVG
+files.  There is one special variable to get some control of this.
+
+*special variable*  
+**`**indent-spacing*`**  
+  Controls how many spaces to indent at each level of XML nesting.  It
+  defaults to 2.  Set it to zero for no indentation.
+
+This simple code:
+
+```lisp
+(with-svg-to-file
+    (scene 'svg-1.1-toplevel :height 20 :width 20)
+    (#p"pale-blue-dot.svg" :if-exists :supersede)
+  (draw scene (:circle :cx 10 :cy 10 :r 5) :fill "cyan"))
+```
+
+results in this XML:
+
+```xml
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="20" height="20" version="1.1" id="toplevel"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+  <circle cx="10" cy="10" r="5" fill="cyan"/>
+</svg>
+```
+
+You can adjust the right margin setting using the CL special
+variable `**PRINT-RIGHT-MARGIN**`, though certain bits of boilerplate
+have newlines hardcoded.
+
+```lisp
+(let ((**print-right-margin** 200))
+       (with-svg-to-file
+           (scene 'svg-1.1-toplevel :height 20 :width 20)
+           (#p"pale-blue-dot.svg" :if-exists :supersede)
+         (draw scene (:circle :cx 10 :cy 10 :r 5) :fill "cyan")))
+```
+
+Results in:
+
+
+```xml
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" 
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="20" height="20" version="1.1" id="toplevel" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <circle cx="10" cy="10" r="5" fill="cyan"/>
+</svg>
+```
+
+Finally, the pathing utilities insert newlines more often than is
+probably necessary, but again I wanted to balance readability with a
+suggestion in the SVG spec that lines shouldn't be longer than 255
+characters.  The API currently offers no control over this.
+
+### Floating Point Precision
+
+By default this library restricts floating point precision to two
+digits after the decimal point, again to keep down the size of the
+resulting file.  Due to how some browsers cope with floating point
+representations of zero (`0.0` and the like), this library will print
+floating point zero as the integer `0`.  A value very close to zero
+will be rounded to prevent representation as something like `0.00`
+when formatted with a precision of two.
+
+*function*
+**`set-float-precision`** *`precision`*
+ This sets the precision, and calculates a reasonable epsilon to test
+ for near-zero values that might break some browsers' SVG number
+ parsing.  It will give a warning if you chose a precision great than
+ six (which, again, some browsers don't care for).
+
+*special variable*  
+**`*float-format-precision*`**  
+  Controls how many digits after the decimal place to print in SVG
+  element attributes.  It defaults to 2.  This variable remains open
+  for backwards compatibility, but it is best to change this with the
+  **`set-float-precision`** function above.
