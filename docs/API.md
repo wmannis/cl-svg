@@ -524,7 +524,7 @@ a consequence there's a *lot* of extra whitespace in the resulting SVG
 files.  There is one special variable to get some control of this.
 
 *special variable*  
-**`**indent-spacing*`**  
+**`*indent-spacing*`**  
   Controls how many spaces to indent at each level of XML nesting.  It
   defaults to 2.  Set it to zero for no indentation.
 
