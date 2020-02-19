@@ -39,7 +39,7 @@
        (defun ,name (,@args)
          (format-instruction ,instruction ,@args))
        (defun ,draw-relative (,@args)
-         (format-instruction ,(string-downcase `,instruction) ,@args)))))
+         (format-instruction ,(string-downcase instruction) ,@args)))))
 
 (define-path-instruction-pair move-to "M" (x y))
 (define-path-instruction-pair line-to "L" (x y))

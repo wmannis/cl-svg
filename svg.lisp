@@ -24,6 +24,7 @@
 ;;; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;;; SUCH DAMAGE.
 
+
 (in-package :cl-svg)
 
 
@@ -231,20 +232,16 @@ contents the new transform is simply appended."))
 (defgeneric assert-required-attributes (element attribute-list))
 (defgeneric make-svg-element (element-name attributes))
 
+
 (defmacro define-element-maker (element name required-attributes)
   `(progn
      (defmethod assert-required-attributes ((element (eql ,element)) attributes)
        (declare (ignore element))
        (unless (evenp (length attributes))
          (warn "attribute list may be missing data: ~A" attributes))
-       (let ((ok t)
-             (missing ()))
-         (dolist (required ,required-attributes (values ok missing))
-           (unless (member required attributes)
-             (setf ok nil)
-             (push required missing)))
-         (unless ok
-           (error 'missing-attributes :message (format nil "~A missing attributes: ~{~A~^ ~}" ,element missing)))))
+       (let ((missing (set-difference ,required-attributes attributes)))
+	 (when missing
+	   (error 'missing-attributes :message (format nil "~A missing attributes: ~{~A~^ ~}" ,element missing)))))
      (defmethod make-svg-element ((element (eql ,element)) attributes)
        (when *check-required-attributes*
          (assert-required-attributes element attributes))
