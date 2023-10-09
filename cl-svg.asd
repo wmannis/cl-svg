@@ -50,12 +50,13 @@
   :maintainer "Patrick Stein <pat@nklein.com>"
   :licence "MIT License"
   :description "Tests for the CL-SVG package"
-  :depends-on ((:version #:cl-svg "0.4") #:nst #:xmls)
+  :depends-on ((:version #:cl-svg "0.4") #:nst #:s-xml)
   :perform (asdf:test-op (o c)
                          (uiop:symbol-call :cl-svg/test :run-all-tests))
 
   :components ((:module "test"
                 :components ((:file "package")
+                             (:file "xml-util")
                              (:file "criterion")
                              (:file "fixture")
                              (:file "toplevel")
