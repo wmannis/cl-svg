@@ -51,7 +51,7 @@
     :initform (error "SVG-ELEMENT must have a NAME")
     :accessor element-name
     :type string)
-   (contents 
+   (contents
     :initform (make-array 0 :adjustable t :fill-pointer 0)
     :accessor element-contents)
    (attributes
@@ -87,7 +87,7 @@
 (defgeneric has-attribute-p (element attribute))
 
 (defmethod has-attribute-p ((e svg-element) attribute)
-  (member attribute (element-attributes e))) 
+  (member attribute (element-attributes e)))
 
 (defgeneric get-attribute (element attribute))
 
@@ -169,7 +169,7 @@ contents the new transform is simply appended."))
   (:default-initargs
      :name "svg"
      :xml-header "<?xml version=\"1.0\" standalone=\"no\"?>"
-     :doctype "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" 
+     :doctype "<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\"
   \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">"
      :attributes (list :version "1.1" :id "toplevel"
                        "xmlns" "http://www.w3.org/2000/svg"
@@ -260,7 +260,7 @@ contents the new transform is simply appended."))
 (define-element-maker :image "image" '(:x :y :height :width :xlink-href))
 (define-element-maker :use "use" '(:xlink-href))
 
-;;; The separation of PARAMS and OPTS has no representation in the 
+;;; The separation of PARAMS and OPTS has no representation in the
 ;;; SVG-ELEMENT class, but provides a visual clue about required
 ;;; attributes.  However, the idiom is used in other elements where
 ;;; the separation *does* matter (see the gradients below).
@@ -410,7 +410,7 @@ contents the new transform is simply appended."))
 ;;; Gradients.
 (defun gradient-stop (&key color offset (opacity 1.0))
   (apply #'make-instance
-         (cons 'svg-element 
+         (cons 'svg-element
                (list :name "stop"
                      :attributes (list :stop-color color
                                        :stop-opacity opacity
@@ -468,11 +468,15 @@ contents the new transform is simply appended."))
 ;;; (TRANSFORM ((scale 4) (rotate 90)) (draw ...))
 (defmacro transform ((&rest transformations) &body element)
   (if (atom (first transformations))
-      `(add-transform ,@element ,transformations)
+      (let ((trans (gensym)))
+        `(let ((,trans ,transformations))
+           (add-transform ,@element ,trans)))
       (let ((trans (gensym))
+            (translist (gensym))
             (e (gensym)))
-        `(let ((,e ,@element))
-           (dolist (,trans (list ,@transformations) ,e)
+        `(let ((,translist (list ,@transformations))
+               (,e ,@element))
+           (dolist (,trans ,translist ,e)
              (add-transform ,e ,trans))))))
 
 
