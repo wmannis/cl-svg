@@ -34,9 +34,31 @@
   :maintainer "William S. Annis <wm.annis@gmail.com>"
   :licence "MIT License"
   :description "Produce Scalable Vector Graphics (SVG) files"
+  :in-order-to ((asdf:test-op (asdf:test-op :cl-svg/test)))
 
-  :components ((:file "package")
-               (:file "format-xml")
-               (:file "path")
-               (:file "svg"))
-  :serial t)
+  :components ((:module "src"
+                :components ((:file "package")
+                             (:file "format-xml")
+                             (:file "path")
+                             (:file "svg"))
+                :serial t)))
+
+(defsystem :cl-svg/test
+  :name "CL-SVG/TEST"
+  :author "Patrick Stein <pat@nklein.com>"
+  :version "0.4"
+  :maintainer "Patrick Stein <pat@nklein.com>"
+  :licence "MIT License"
+  :description "Tests for the CL-SVG package"
+  :depends-on ((:version #:cl-svg "0.4") #:nst #:xmls)
+  :perform (asdf:test-op (o c)
+                         (uiop:symbol-call :cl-svg/test :run-all-tests))
+
+  :components ((:module "test"
+                :components ((:file "package")
+                             (:file "criterion")
+                             (:file "fixture")
+                             (:file "toplevel")
+                             (:file "shapes")
+                             (:file "run"))
+                :serial t)))
