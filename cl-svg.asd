@@ -30,7 +30,7 @@
 (defsystem :cl-svg
   :name "CL-SVG"
   :author "William S. Annis <wm.annis@gmail.com>"
-  :version "0.03"
+  :version "0.4"
   :maintainer "William S. Annis <wm.annis@gmail.com>"
   :licence "MIT License"
   :description "Produce Scalable Vector Graphics (SVG) files"
@@ -40,4 +40,3 @@
                (:file "path")
                (:file "svg"))
   :serial t)
-  
