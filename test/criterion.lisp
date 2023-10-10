@@ -19,3 +19,13 @@
        (nst:make-failure-report :format "~A expected, but got ~A"
                                 :args (list (xml-to-string expected-xml)
                                             (xml-to-string got-xml)))))))
+
+(nst:def-criterion (:path= (expected) (got))
+  (let ((got (remove #\newline got)))
+    (cond
+      ((string= expected got)
+       (nst:make-success-report))
+      (t
+       (nst:make-failure-report :format "~A expected, but got ~A"
+                                :args (list expected
+                                            got))))))

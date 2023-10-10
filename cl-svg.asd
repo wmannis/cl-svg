@@ -62,5 +62,6 @@
                              (:file "toplevel")
                              (:file "shapes")
                              (:file "transforms")
+                             (:file "paths")
                              (:file "run"))
                 :serial t)))
