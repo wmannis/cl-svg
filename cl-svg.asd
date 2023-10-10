@@ -61,5 +61,6 @@
                              (:file "fixture")
                              (:file "toplevel")
                              (:file "shapes")
+                             (:file "transforms")
                              (:file "run"))
                 :serial t)))
