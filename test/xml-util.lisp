@@ -4,16 +4,21 @@
 (in-package #:cl-svg/test)
 
 (defun ensure-xml (xml-designator)
-  (typecase xml-designator
-    (cl-svg::svg-element
-     (ignore-errors (s-xml:parse-xml-string
-                     (with-output-to-string (s)
-                       (cl-svg:stream-out s xml-designator))
-                     :output-type :xml-struct)))
-    (s-xml::xml-element
-     xml-designator)
-    (string
-     (ignore-errors (s-xml:parse-xml-string xml-designator :output-type :xml-struct)))))
+  ;; Unless we tell s-xml to ignore the namespaces, then the
+  ;; #'PARSE-XML-STRING does not like trying to construct something
+  ;; using a namespace prefix when it doesn't know the definition
+  ;; for that namespace prefix.
+  (let ((s-xml:*ignore-namespaces* t))
+    (typecase xml-designator
+      (cl-svg::svg-element
+       (ignore-errors (s-xml:parse-xml-string
+                       (with-output-to-string (s)
+                         (cl-svg:stream-out s xml-designator))
+                       :output-type :xml-struct)))
+      (s-xml::xml-element
+       xml-designator)
+      (string
+       (ignore-errors (s-xml:parse-xml-string xml-designator :output-type :xml-struct))))))
 
 (defun xml-attrs= (a b)
   (let ((a-attrs (s-xml:xml-element-attributes a))

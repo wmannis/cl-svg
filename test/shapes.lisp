@@ -45,6 +45,28 @@
     (cl-svg:without-attribute-check
       (cl-svg:draw scene (:rect)))))
 
+(nst:def-test-group polyline-tests (test-scene)
+  (nst:def-test polyline (:xml= "<polyline points='some string here'/>")
+    (cl-svg:draw scene (:polyline :points "some string here")))
+
+  (nst:def-test polyline-without-points (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:polyline)))
+
+  (nst:def-test degenerate-polyline (:xml= "<polyline/>")
+    (cl-svg:without-attribute-check
+      (cl-svg:draw scene (:polyline)))))
+
+(nst:def-test-group polygon-tests (test-scene)
+  (nst:def-test polygon (:xml= "<polygon points='some string here'/>")
+    (cl-svg:draw scene (:polygon :points "some string here")))
+
+  (nst:def-test polygon-without-points (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:polygon)))
+
+  (nst:def-test degenerate-polygon (:xml= "<polygon/>")
+    (cl-svg:without-attribute-check
+      (cl-svg:draw scene (:polygon)))))
+
 (nst:def-test-group ellipse-tests (test-scene)
   (nst:def-test ellipse (:xml= "<ellipse cx='1' cy='2' rx='3' ry='4' fill='red'/>")
     (cl-svg:draw scene (:ellipse :cx 1 :cy 2 :rx 3 :ry 4)
@@ -83,3 +105,48 @@
   (nst:def-test degenerate-circle (:xml= "<circle/>")
     (cl-svg:without-attribute-check
       (cl-svg:draw scene (:circle)))))
+
+(nst:def-test-group path-tests (test-scene)
+  (nst:def-test path (:xml= "<path d='some string here'/>")
+    (cl-svg:draw scene (:path :d "some string here")))
+
+  (nst:def-test path-without-d (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:path)))
+
+  (nst:def-test degenerate-path (:xml= "<path/>")
+    (cl-svg:without-attribute-check
+      (cl-svg:draw scene (:path)))))
+
+(nst:def-test-group use-tests (test-scene)
+  (nst:def-test use (:xml= "<use xlink\:href='some-id'/>")
+    (cl-svg:draw scene (:use :xlink-href "some-id")))
+
+  (nst:def-test use-without-xlink-href (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:use)))
+
+  (nst:def-test degenerate-use (:xml= "<use/>")
+    (cl-svg:without-attribute-check
+      (cl-svg:draw scene (:use)))))
+
+(nst:def-test-group image-tests (test-scene)
+  (nst:def-test image (:xml= "<image x='1' y='2' width='3' height='4' xlink\:href='some-id'/>")
+    (cl-svg:draw scene (:image :x 1 :y 2 :width 3 :height 4 :xlink-href "some-id")))
+
+  (nst:def-test image-without-x (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:image :y 2 :width 3 :height 4 :xlink-href "some-id")))
+
+  (nst:def-test image-without-y (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:image :x 1 :width 3 :height 4 :xlink-href "some-id")))
+
+  (nst:def-test image-without-width (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:image :x 1 :y 2 :height 4 :xlink-href "some-id")))
+
+  (nst:def-test image-without-height (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:image :x 1 :y 2 :width 3 :xlink-href "some-id")))
+
+  (nst:def-test image-without-xlink-href (:err :type cl-svg:missing-attributes)
+    (cl-svg:draw scene (:image :x 1 :y 2 :width 3 :height 4)))
+
+  (nst:def-test degenerate-image (:xml= "<image/>")
+    (cl-svg:without-attribute-check
+      (cl-svg:draw scene (:image)))))
