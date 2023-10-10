@@ -64,5 +64,6 @@
                              (:file "transforms")
                              (:file "paths")
                              (:file "groupings")
+                             (:file "precision")
                              (:file "run"))
                 :serial t)))
