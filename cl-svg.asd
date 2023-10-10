@@ -63,5 +63,6 @@
                              (:file "shapes")
                              (:file "transforms")
                              (:file "paths")
+                             (:file "groupings")
                              (:file "run"))
                 :serial t)))

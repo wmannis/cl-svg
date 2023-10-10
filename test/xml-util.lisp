@@ -17,6 +17,13 @@
                        :output-type :xml-struct)))
       (s-xml::xml-element
        xml-designator)
+      (list
+       (ensure-xml (reduce #'(lambda (a b)
+                               (if (null a)
+                                   b
+                                   (concatenate 'string a (list #\Newline) b)))
+                           xml-designator
+                           :initial-value nil)))
       (string
        (ignore-errors (s-xml:parse-xml-string xml-designator :output-type :xml-struct))))))
 
