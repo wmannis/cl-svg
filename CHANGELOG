@@ -1,3 +1,22 @@
+0.4.2 - Oct 25 2023
+  * from https://github.com/wmannis/cl-svg/issue/10
+    reported by [Steve Losh, steve@stevelosh.com]
+    https://github.com/wmannis/cl-svg/pull/21
+    [Patrick Stein, <pat@nklein.com>]
+
+0.4.1 - Oct 25 2023
+  * added test suite
+    https://github.com/wmannis/cl-svg/pull/20
+    [Patrick Stein, <pat@nklein.com>]
+
+0.4.0 - Oct 14 2023
+  * corrected evaluation order of TRANSFORM macro
+    https://github.com/wmannis/cl-svg/pull/19
+    [Patrick Stein, <pat@nklein.com>]
+  * corrected ASDF version format
+    https://github.com/wmannis/cl-svg/pull/13
+    [Oleg Bocharov <oleg.bocharov@mirrorweb.com>]
+
 0.03 - Jan 20 2018
   * homogenzied handling of output numbers, so that paths and
     transformations get proper precision control
