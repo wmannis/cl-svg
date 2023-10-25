@@ -1,3 +1,8 @@
+0.4.1 - Oct 25 2023
+  * added test suite
+    https://github.com/wmannis/cl-svg/pull/20
+    [Patrick Stein, <pat@nklein.com>]
+
 0.4.0 - Oct 14 2023
   * corrected evaluation order of TRANSFORM macro
     https://github.com/wmannis/cl-svg/pull/19
