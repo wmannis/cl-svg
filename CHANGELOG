@@ -1,3 +1,9 @@
+0.4.3 - Oct 25 2023
+  * from https://github.com/wmannis/cl-svg/pull/12
+    by [ghost]
+    https://github.com/wmannis/cl-svg/pull/22
+    [Patrick Stein, <pat@nklein.com>]
+
 0.4.2 - Oct 25 2023
   * from https://github.com/wmannis/cl-svg/issue/10
     reported by [Steve Losh, steve@stevelosh.com]
