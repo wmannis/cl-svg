@@ -84,6 +84,7 @@
            #:quadratic-curve-to #:quadratic-curve-to-r
            #:smooth-quadratic-curve-to #:smooth-quadratic-curve-to-r
            #:arc-to #:arc-to-r
-           #:close-path))
+           #:close-path
+           #:points))
 
 ;;; package.lisp ends here

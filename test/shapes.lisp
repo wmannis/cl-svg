@@ -46,8 +46,8 @@
       (cl-svg:draw scene (:rect)))))
 
 (nst:def-test-group polyline-tests (test-scene)
-  (nst:def-test polyline (:xml= "<polyline points='some string here'/>")
-    (cl-svg:draw scene (:polyline :points "some string here")))
+  (nst:def-test polyline (:xml= "<polyline points=' 1,2 3,4'/>")
+    (cl-svg:draw scene (:polyline :points (cl-svg:points '((1 2) (3 4))))))
 
   (nst:def-test polyline-without-points (:err :type cl-svg:missing-attributes)
     (cl-svg:draw scene (:polyline)))
