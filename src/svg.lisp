@@ -24,7 +24,6 @@
 ;;; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 ;;; SUCH DAMAGE.
 
-
 (in-package :cl-svg)
 
 
@@ -231,7 +230,6 @@ contents the new transform is simply appended."))
 ;;; See the comment for *CHECK-REQUIRED-ATTRIBUTES* above.
 (defgeneric assert-required-attributes (element attribute-list))
 (defgeneric make-svg-element (element-name attributes))
-
 
 (defmacro define-element-maker (element name required-attributes)
   `(progn
