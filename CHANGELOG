@@ -1,3 +1,9 @@
+0.4.5 - Oct 25 2023
+  * Added TEXT* macro suggested in pull-request #11
+    by [Mark Evenson, <evenson.not.org@gmail.com>]
+    https://github.com/wmannis/cl-svg/pull/25
+    [Patrick Stein, <pat@nklein.com>]
+
 0.4.4 - Oct 25 2023
   * Made work with ABCL based on clues in this ABCL bug
     report: https://abcl.org/trac/ticket/223

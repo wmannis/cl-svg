@@ -30,7 +30,7 @@
 (defsystem :cl-svg
   :name "CL-SVG"
   :author "William S. Annis <wm.annis@gmail.com>"
-  :version "0.4.4"
+  :version "0.4.5"
   :maintainer "William S. Annis <wm.annis@gmail.com>"
   :licence "MIT License"
   :description "Produce Scalable Vector Graphics (SVG) files"
@@ -45,11 +45,11 @@
 (defsystem :cl-svg/test
   :name "CL-SVG/TEST"
   :author "Patrick Stein <pat@nklein.com>"
-  :version "0.4.4"
+  :version "0.4.5"
   :maintainer "Patrick Stein <pat@nklein.com>"
   :licence "MIT License"
   :description "Tests for the CL-SVG package"
-  :depends-on ((:version #:cl-svg "0.4.4") #:nst #:s-xml)
+  :depends-on ((:version #:cl-svg "0.4.5") #:nst #:s-xml)
   :perform (asdf:test-op (o c)
                          (uiop:symbol-call :cl-svg/test :run-all-tests))
 
