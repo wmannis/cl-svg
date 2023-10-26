@@ -1,3 +1,10 @@
+0.4.4 - Oct 25 2023
+  * Made work with ABCL based on clues in this ABCL bug
+    report: https://abcl.org/trac/ticket/223
+    (though the diff there is no longer accessible)
+    https://github.com/wmannis/cl-svg/pull/24
+    [Patrick Stein, <pat@nklein.com>]
+
 0.4.3 - Oct 25 2023
   * from https://github.com/wmannis/cl-svg/pull/12
     by [ghost]

@@ -92,22 +92,46 @@ printed after the decimal point."))
         translation
         (string-downcase (symbol-name kw)))))
 
-(defmethod pp-xml-value ((s stream) value &optional colon-p at-p)
+;;;
+;;; There is a long-standing ABCL bug because it sometimes prints with
+;;; an XP::XP-STRUCTURE instance instead of a STREAM but the
+;;; XP::XP-STRUCTURE instance is not a subtype of STREAM.
+;;;
+;;; As such, all of these generic methods that depend on the first
+;;; argument being a stream need to be implemented separately
+;;; for STREAM and XP::XP-STRUCTURE when using ABCL.
+;;;
+;;; Alternatively, we could not specialize on the type of the
+;;; streams here, but that seems less ideal as some classes of
+;;; errors would then propagate beyond this boundary. To make
+;;; this work with or without ABCL, we need a macro anyway,
+;;; so we may as well just define both cases for ABCL rather
+;;; than get rid of the specialization on the stream.
+;;;
+(defmacro make-stream-method (name (s &rest args) &body body)
+  `(progn
+     (defmethod ,name ((,s stream) ,@args)
+       ,@body)
+     #+abcl
+     (defmethod ,name ((,s xp::xp-structure) ,@args)
+       ,@body)))
+
+(make-stream-method pp-xml-value (s value &optional colon-p at-p)
   (declare (ignore colon-p at-p))
   (format s "~A" value))
 
-(defmethod pp-xml-attr ((s stream) (kw symbol) &optional colon-p at-p)
+(make-stream-method pp-xml-attr (s (kw symbol) &optional colon-p at-p)
   (declare (ignore colon-p at-p))
   (format s "~A" (xmlify-keyword kw)))
 
-(defmethod pp-xml-attr ((s stream) (kw string) &optional colon-p at-p)
+(make-stream-method pp-xml-attr (s (kw string) &optional colon-p at-p)
   (declare (ignore colon-p at-p))
   (format s "~A" kw))
 
 ;;; CLHS 12.1.3.2 - if a ratio can be simplified to an integer, it
 ;;; will be. This includes the tricky 0/n, which is just 0, so I don't
 ;;; have to watch for that here.
-(defmethod pp-xml-value ((s stream) (value ratio) &optional colon-p at-p)
+(make-stream-method pp-xml-value (s (value ratio) &optional colon-p at-p)
   (declare (ignore colon-p at-p))
   (format s "~v$" *float-format-precision* value))
 
@@ -115,7 +139,7 @@ printed after the decimal point."))
 ;;; representation of zero, some accept it.  The standard apparently
 ;;; admits several interpretations.  This code filters out fpns
 ;;; arbitrarily close to zero, and just dumps in a single integer 0.
-(defmethod pp-xml-value ((s stream) (value float) &optional colon-p at-p)
+(make-stream-method pp-xml-value (s (value float) &optional colon-p at-p)
   (declare (ignore colon-p at-p))
   (if (< (- (abs value) *precision-epsilon*) 0.00000001)
       (format s "0")
