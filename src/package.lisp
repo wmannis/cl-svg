@@ -50,7 +50,7 @@
            #:script
            #:script-link
            #:style
-           #:text #:textarea
+           #:text #:text* #:textarea
            #:tspan
            #:make-svg-symbol
            #:make-marker

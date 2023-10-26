@@ -95,4 +95,12 @@
                                         </text>")
     (cl-svg:text scene (:x 1 :y 2)
       "aaa"
-      (cl-svg:tspan (:color "green") "bbb"))))
+      (cl-svg:tspan (:color "green") "bbb")))
+
+  (nst:def-test text* (:xml= "<g>
+                                <text x='1' y='2'>
+                                  aaa
+                                </text>
+                              </g>")
+    (cl-svg:make-group scene ()
+      (cl-svg:text* (:x 1 :y 2) "aaa"))))
