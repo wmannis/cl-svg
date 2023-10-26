@@ -10,4 +10,7 @@
   (let ((*print-pretty* print-pretty)
         (nst:*debug-on-error* debug-on-error)
         (nst:*debug-on-fail* debug-on-fail))
-    (nst:nst-cmd :run-package #.*package*)))
+    #-abcl (nst:nst-cmd :run-package #.*package*)
+    #+abcl (unwind-protect
+                (nst-control-api:run-package #.*package*)
+             (nst-control-api:report-package #.*package*))))
