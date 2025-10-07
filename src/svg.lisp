@@ -350,6 +350,10 @@ contents the new transform is simply appended."))
 (define-element-maker :mask "mask" '(:id))
 (define-defs-group-maker make-mask :mask)
 
+;;; clipping path
+(define-element-maker :clip-path "clipPath" '(:id))
+(define-defs-group-maker make-clip-path :clip-path)
+
 
 ;;; Inline groups - these can go anywhere, not just <defs/>.
 (defmacro define-toplevel-group-maker (macro-name element-name)
