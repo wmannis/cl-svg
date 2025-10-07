@@ -239,7 +239,7 @@ There are five grouping elements that this library puts into the
 **`make-mask`** *scene (&rest attributes) &body shapes => svg-element*  
  Creates alpha masks.
 
-*macro*__
+*macro*  
 **`make-clip-path`** *scene (&rest attributes) &body shapes => svg-element*  
 Creates a clipping path.
 
