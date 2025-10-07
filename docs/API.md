@@ -197,7 +197,7 @@ make a convenience macro available:
  The shape element will be placed in the group.  An error is signalled
  if you try to call this outside a group definition macro.
 
-There are four grouping elements that this library puts into the
+There are five grouping elements that this library puts into the
 `<defs>` element.  Each must define an `:id` property.
 
 *macro*  
@@ -238,6 +238,24 @@ There are four grouping elements that this library puts into the
 *macro*  
 **`make-mask`** *scene (&rest attributes) &body shapes => svg-element*  
  Creates alpha masks.
+
+*macro*__
+**`make-clip-path`** *scene (&rest attributes) &body shapes => svg-element*  
+Creates a clipping path.
+
+```lisp
+(with-svg-to-file (scene 'svg-1.1-toplevel :width 200 :height 100)
+    (#p"clip.svg" :if-exists :supersede)
+  (let ((clip (make-clip-path scene (:id :generate)
+                (draw* (:rect :x 0 :y 0 :width 200 :height 50)))))
+    (draw scene
+        (:circle :cx 100 :cy 50 :r 50 :fill "red" 
+                 :clip-path (xlink-href clip)))))
+```
+
+Note that `xlink-href` is here called to get the URL for the SVG
+`clip-path` property.
+
 
 ## Fill Gradients
 
